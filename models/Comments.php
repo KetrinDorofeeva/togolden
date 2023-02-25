@@ -34,11 +34,13 @@
             ];
         }
 
+        //Связь комментария с компанией
         public function getCompany()
         {
             return $this->hasOne(Companies::class, ['id' => 'id_company']);
         }
 
+        //Связь комментария с пользователем
         public function getUser()
         {
             return $this->hasOne(User::class, ['id' => 'id_user']);
