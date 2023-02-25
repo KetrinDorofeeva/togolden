@@ -120,3 +120,134 @@ return [
 
 ## <p id = "implementation-software-product">Реализация программного продукта</p>
 ### <p id = "main-page">Компании</p>
+В зависимости от того, авторизован ли пользователь, на странице компаний отображаются определенные элементы.  
+Страница компаний, как гостя, так и авторизованного пользователя, включает в себя:
+1)  По 6 карточек компаний на каждой странице.  
+    Каждая карточка имеет информацию: название компании, адрес, телефон и генеральный директор.
+2)  Пагинация.
+
+Контроллер:
+```php
+use app\models\Companies;
+use yii\data\Pagination;
+
+//Компании
+public function actionIndex()
+{
+    $query = Companies::find();
+    $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => 6]);
+    $model = $query->offset($pages->offset)->limit($pages->limit)->all();
+
+    return $this->render('index', compact('model', 'pages'));
+}
+```
+
+Модуль:
+```php
+namespace app\models;
+
+use Yii;
+
+class Companies extends \yii\db\ActiveRecord
+{
+    public static function tableName()
+    {
+        return 'companies';
+    }
+
+    public function rules()
+    {
+        return [
+            ['name', 'required', 'message' => 'Введите название вашей компании!'],
+            ['inn', 'required', 'message' => 'Введите ИНН вашей компании!'],
+            [['inn'], 'integer'],
+            ['inn', 'string', 'min' => 10, 'max' => 10],
+            ['general_information', 'required', 'message' => 'Введите общую информацию вашей компании!'],
+            ['general_manager', 'required', 'message' => 'Введите генерального директора вашей компании!'],
+            ['address', 'required', 'message' => 'Введите адрес вашей компании!'],
+            ['phone', 'required', 'message' => 'Введите телефон вашей компании!'],
+            [['name', 'general_manager', 'phone'], 'string', 'max' => 255],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название',
+            'inn' => 'ИНН',
+            'general_information' => 'Общая информация',
+            'general_manager' => 'Генеральный директор',
+            'address' => 'Адрес',
+            'phone' => 'Телефон',
+        ];
+    }
+
+    //Связь комментария с компанией
+    public function getComments()
+    {
+        return $this->hasMany(Comments::class, ['id_company' => 'id']);
+    }
+}
+```
+
+Представление:
+```php
+<?php
+    use yii\bootstrap4\Html;
+    use yii\bootstrap4\LinkPager;
+
+    $this->title = 'Компании';
+?>
+
+<div class="container">
+    <div class="body-content">
+        <div class="row">
+            <?php
+                foreach ($model as $company) {
+            ?>
+                    <div class="col-lg-3 bg-dark company_block">
+                        <?php 
+                            echo "<a href = '/site/view/$company->id'>";
+                                echo "<span style='color: #FFC134; font-weight: bold'>" . $company->name . "</span><br>";
+                                echo "<span class = 'title_company'>Адрес: </span>" . $company->address . "<br>";
+                                echo "<span class = 'title_company'>Телефон: </span>" . $company->phone . "<br>";
+                                echo "<span class = 'title_company'>Генеральный директор: </span>" . $company->general_manager;
+                            echo "</a>";
+
+                            if (!Yii::$app->user->isGuest) {
+                                echo "<div style='margin-left: 96%'>" .
+                                    "<div style='padding-bottom: 15px'>" . Html::a(Html::img('@web/img/pencil-fill.svg'), ['update', 'id' => $company->id]) . "</div>" .
+
+                                    Html::a(Html::img('@web/img/trash-fill.svg'), ['delete', 'id' => $company->id], [
+                                        'data' => [
+                                            'confirm' => 'Вы уверены, что хотите удалить эту компанию?',
+                                            'method' => 'post',
+                                        ]
+                                    ]) .
+                                "</div>";
+                            }
+                        ?>
+                    </div>
+            <?php } ?>
+        </div>
+
+        <div class="mt-4">
+            <?php
+                if (!Yii::$app->user->isGuest) {
+                    echo Html::a('Новая компания', ['create'], ['class' => 'btn btn-success']);
+                }
+            ?>
+        </div>
+    </div><br>
+
+    <?= LinkPager::widget([
+            'pagination' => $pages,
+        ]);
+    ?>
+</div>
+```
+
+Десктопная версия:  
+![Десктопная версия страницы с компаниями](https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies.png)  
+
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
