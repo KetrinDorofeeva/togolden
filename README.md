@@ -247,7 +247,11 @@ class Companies extends \yii\db\ActiveRecord
 </div>
 ```
 
-Десктопная версия:  
-![Десктопная версия страницы с компаниями](https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies.png)  
+Десктопная версия (гость):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (guest).png" alt = "Компании (десктопная версия)" />
+
+Мобильная версия (гость):
+
+https://user-images.githubusercontent.com/93386515/221370287-c783c671-14af-4eda-abf0-09b27703af69.mp4
 
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
