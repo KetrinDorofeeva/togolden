@@ -53,8 +53,6 @@
         //Компании
         public function actionIndex()
         {
-            //$model = Companies::find()->all();
-
             $query = Companies::find();
             $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => 6]);
             $model = $query->offset($pages->offset)->limit($pages->limit)->all();
