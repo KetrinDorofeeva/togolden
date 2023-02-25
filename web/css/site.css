@@ -1,0 +1,162 @@
+.navbar-dark .navbar-nav .nav-link { color: white }
+
+main > .container { padding: 70px 15px 20px }
+
+.alert-success.alert.alert-dismissible { margin-left: 15px }
+
+.body-content .row { justify-content: space-between }
+
+.company_block {
+    margin: 15px 0 10px 15px;
+    padding: 15px 20px 20px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+.company_block a {
+    text-decoration: none;
+    color: white;
+}
+
+.company_block:hover {
+    background: rgba(52, 58, 64, 0.92) !important;
+    cursor: pointer;
+}
+
+.title_company {
+    color: white;
+    font-weight: bold;
+}
+
+.site-registration,
+.site-login {
+    color: #343A40;
+}
+
+.btn.btn-success {
+    background: #FFC134;
+    color: #343A40;
+    border: none;
+}
+
+.breadcrumb-item a { color: #eea90a }
+
+.btn.btn-link {
+    padding: 0;
+    text-decoration: none;
+}
+
+.table { margin: 0em }
+
+.card-header { background: white }
+
+.card .collapse.show { background: #F7F7F7 }
+
+.table tr { background: white !important }
+
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+    border: none !important;
+}
+
+.table-bordered th {
+    color: #FFC134;
+    padding-left: 0;
+    text-align: left;
+}
+
+.table-bordered td { text-align: left }
+
+.comment_chat {
+    float: right;
+    color: #eea90a;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 15px;
+    padding-top: 15px
+}
+
+#add_name_comment,
+#add_inn_comment,
+#add_general_information_comment,
+#add_general_manager_comment,
+#add_address_comment,
+#add_phone_comment,
+#add_general_comment {
+    display: none;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #343a40;
+}
+
+.page-item.active .page-link {
+    background: #343a40;
+    border-color: #343A40;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+a.asc:after, a.desc:after {
+    content: '';
+    left: 3px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border: solid 5px transparent;
+    margin: 4px 4px 2px 4px;
+    background: transparent;
+}
+
+a.asc:after {
+    border-bottom: solid 7px #212529;
+    border-top-width: 0;
+}
+
+a.desc:after {
+    border-top: solid 7px #212529;
+    border-bottom-width: 0;
+}
+
+.grid-view th { white-space: nowrap }
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+.nav li > form > button.logout {
+    padding-top: 7px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media(max-width:767px) {
+    .nav li > form > button.logout {
+        display:block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+
+.nav > li > form > button.logout:focus,
+.nav > li > form > button.logout:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.nav > li > form > button.logout:focus { outline: none }
