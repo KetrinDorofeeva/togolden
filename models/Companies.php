@@ -37,6 +37,7 @@
             ];
         }
 
+        //Связь комментария с компанией
         public function getComments()
         {
             return $this->hasMany(Comments::class, ['id_company' => 'id']);
