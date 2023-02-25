@@ -25,5 +25,6 @@
 
 ## <p id = "table-of-contents">Оглавление</p>
 ## <p id = "database-design">База данных</p>
-
+![ER-диаграмма базы данных](https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/database-design.png)
+![Таблицы и поля базы данных](https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/database-tables-and-fields.png)  
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
