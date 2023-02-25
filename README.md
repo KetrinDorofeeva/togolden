@@ -30,6 +30,12 @@
   - <a href = "#friendly-url">Настройка ЧПУ</a>
 - <a href = "#implementation-software-product">Реализация программного продукта</a>
   - <a href = "#main-page">Компании</a>
+  - <a href = "#registration">Регистрация</a>
+    - <a href = "#fields-and-their-filling-registration">Поля и их заполнение</a>
+    - <a href = "#layout-registration">Верстка формы регистрации</a>
+  - <a href = "#authorization">Авторизация</a>
+    - <a href = "#fields-and-their-filling-authorization">Поля и их заполнение</a>
+    - <a href = "#layout-authorization">Верстка формы авторизации</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -248,10 +254,47 @@ class Companies extends \yii\db\ActiveRecord
 ```
 
 Десктопная версия (гость):  
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (guest).png" alt = "Компании (десктопная версия)" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (guest).png" alt = "Компании (гость)" />
 
 Мобильная версия (гость):
 
 https://user-images.githubusercontent.com/93386515/221370287-c783c671-14af-4eda-abf0-09b27703af69.mp4
+
+<br>
+Авторизованный пользователь на странице компаний имеет возможность: добавлять, редактировать и удалять компании.<br>
+Десктопная версия (пользователь):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (user).png" alt = "Компании (пользователь)" />
+
+Мобильная версия (пользователь):
+
+https://user-images.githubusercontent.com/93386515/221371094-e70fec3e-5f47-4239-95a6-d45dc275de33.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "registration">Регистрация</p>
+#### <p id = "fields-and-their-filling-registration">Поля и их заполнение</p>
+<table>
+  <tr>
+    <td><b>Поля</b></td>
+    <td><b>Обязательность заполнения</b></td>
+    <td><b>Правила заполнения</b></td>
+  </tr>
+  <tr>
+    <td>Логин</td>
+    <td>Да</td>
+    <td>Логин должен быть уникальным (не должен совпадать с логиным из базы данных).</td>
+  </tr>
+  <tr>
+    <td>Пароль</td>
+    <td>Да</td>
+    <td>Пароль от 8 до 12 символов должен содержать хотя бы одну большую букву, одну маленькую букву и одну цифру.<br>Пример: Goodpassword7</td>
+  </tr>
+  <tr>
+    <td>Повторите пароль</td>
+    <td>Да</td>
+    <td>Введенные данные должны совпадать с данными из поля "Пароль".</td>
+  </tr>
+</table>
 
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
