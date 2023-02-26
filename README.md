@@ -1324,3 +1324,27 @@ https://user-images.githubusercontent.com/93386515/221420060-30c2abe8-b2ab-45d5-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "delete-company">Удалить компанию</p>
+При удалении компании на экране появляется оповещение, в котором сказано, что компания успешно удалена.
+
+Контроллер:
+```php
+use app\models\Companies;
+
+//Удалить компанию
+public function actionDelete($id)
+{
+    $model = Companies::findOne($id);
+
+    Companies::findOne($id)->delete();
+    Yii::$app->session->setFlash('success', "Компания успешно удалена");
+
+    return $this->redirect(['/site/index']);
+    return $this->render(compact('model'));
+}
+```
+
+Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
+Изображение корзины, при нажатии на которую удаляется компания (и относящиеся к ней комментарии), находится в представлении ```index```, которое указано в подразделе  <a href = "#main-page">Компании</a>.
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
