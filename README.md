@@ -1241,3 +1241,82 @@ https://user-images.githubusercontent.com/93386515/221418705-4ee45305-e233-4c34-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "update-company">Редактировать компанию</p>
+Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+
+Поля для редактирования:  
+1)  Название;
+2)  ИНН;
+3)  Общая информация;
+4)  Генеральный директор;
+5)  Адрес;
+6)  Телефон.
+
+При редактировании компании на экране появляется оповещение, в котором сказано, что компания успешно обновлена.
+
+Контроллер:
+```php
+use app\models\Companies;
+
+//Редактировать компанию
+public function actionUpdate($id)
+{
+    $model = Companies::findOne($id);
+
+    if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        Yii::$app->session->setFlash('success', "Компания успешно обновлена");
+
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+
+    return $this->render('update', compact('model'));
+}
+```
+
+Представление ```update```:
+```php
+<?php
+    use yii\helpers\Html;
+
+    $this->title = 'Редактировать компанию ' . $model->name;
+    $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+    $this->params['breadcrumbs'][] = 'Редактировать компанию ' . $model->name;
+?>
+
+<div class="companies-update">
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('_form', ['model' => $model]) ?>
+</div>
+```
+
+Представление ```_form```:
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\bootstrap4\ActiveForm;
+?>
+
+<div class="companies-form">
+    <?php
+        $form = ActiveForm::begin();
+            echo $form->field($model, 'name')->textInput();
+            echo $form->field($model, 'inn')->textInput();
+            echo $form->field($model, 'general_information')->textarea(['rows' => 6]);
+            echo $form->field($model, 'general_manager')->textInput();
+            echo $form->field($model, 'address')->textarea(['rows' => 6]);
+            echo $form->field($model, 'phone')->textInput();
+    ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        </div>
+    <?php ActiveForm::end(); ?>
+</div>
+```
+Десктопная версия:
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/update-company.png" alt = "Редактирование компании" />
+
+Мобильная версия:
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
