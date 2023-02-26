@@ -1233,5 +1233,11 @@ public function actionCreate()
 Десктопная версия:
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/create-company.png" alt = "Добавление компании" />
 
+Мобильная версия:
+
+https://user-images.githubusercontent.com/93386515/221418705-4ee45305-e233-4c34-a514-4b62f7519170.mp4
+
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "add-company">Редактировать компанию</p>
