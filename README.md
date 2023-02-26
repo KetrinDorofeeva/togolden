@@ -1313,6 +1313,7 @@ public function actionUpdate($id)
     <?php ActiveForm::end(); ?>
 </div>
 ```
+
 Десктопная версия:  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/update-company.png" alt = "Редактирование компании" />
 
@@ -1345,6 +1346,11 @@ public function actionDelete($id)
 
 Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
 Изображение корзины, при нажатии на которую удаляется компания (и относящиеся к ней комментарии), находится в представлении ```index```, которое указано в подразделе  <a href = "#main-page">Компании</a>.
+
+Десктопная версия:  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/delete-company.png" alt = Удалить компанию" />
+
+Мобильная версия:  
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
