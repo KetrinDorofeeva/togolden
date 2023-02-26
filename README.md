@@ -33,6 +33,9 @@
   - <a href = "#registration">Регистрация</a>
   - <a href = "#authorization">Авторизация</a>
   - <a href = "#company-page">Страница компании</a>
+  - <a href = "#add-company">Добавить компанию</a>
+  - <a href = "#update-company">Редактировать компанию</a>
+  - <a href = "#delete-company">Удалить компанию</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -1128,7 +1131,15 @@ function viewGenCom() {
 
 Десктопная версия (пользователь):  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_1 (user).png" alt = "Страница компании_1 (пользователь)" />
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" />
+
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" /><br><br>
+
+https://user-images.githubusercontent.com/93386515/221404465-144c91d2-d8c5-4f24-b824-f552a8a6649a.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "add-company">Добавить компанию</p>
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
