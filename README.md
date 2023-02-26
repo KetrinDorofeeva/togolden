@@ -485,6 +485,9 @@ https://user-images.githubusercontent.com/93386515/221398605-e2cc616f-01ea-4855-
 Для того, чтобы доступ к системе имели только авторизированные пользователи, используются фильтры контроля доступа (ACF).  
 **ACF** – это фильтры, которые могут присоединяться к контроллеру или модулю как поведение.
 ```php
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+ 
 public function behaviors()
 {
     return [
@@ -530,6 +533,18 @@ public function actionLogin()
     $model->password = '';
     return $this->render('login', compact('model'));
 }
+```
+
+Выход пользователя из личного кабинета:
+```php
+//Выход из личного кабинета пользователя
+public function actionLogout()
+{
+    Yii::$app->user->logout();
+
+    return $this->goHome();
+}
+
 ```
 
 Метод ```login()``` проверяет данные на соответствие правилам, описанных в модели.  Здесь вызывается метод ```validatePassword()```, который при отсутствии ошибок создает объект ```User```, вызывая метод ```getUser()```. Метод проверяет, не авторизован ли пользователь. Если не авторизован – вызывается статический метод ```findByUsername()``` с переданным ему введенным именем пользователя класса ```User```.  
@@ -664,7 +679,7 @@ https://user-images.githubusercontent.com/93386515/221399581-fd8e6fc4-d8fd-4393-
 3)  Видеть комментарии других пользователей.
 
 Каждый комментарий включает в себя: время добавление, логин пользователя и текст комментария.  
-Реализована интерактивность добавления комментария (поле ввода по умолчанию скрыто, открывается по желанию пользователя, закрывается после сохранения).
+Реализована интерактивность добавления комментария (поле ввода по умолчанию скрыто, открывается по желанию пользователя, закрывается после сохранения). При добавлении нового комментария на экране появляется оповещение, в котором сказано, что комментарий успешно добавлен.
 
 Контроллер:
 ```php
@@ -1140,6 +1155,83 @@ https://user-images.githubusercontent.com/93386515/221404465-144c91d2-d8c5-4f24-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "add-company">Добавить компанию</p>
+Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+
+Поля для заполнения:  
+1)  Название;
+2)  ИНН;
+3)  Общая информация;
+4)  Генеральный директор;
+5)  Адрес;
+6)  Телефон.
+
+При добавлении новой компании на экране появляется оповещение, в котором сказано, что компания успешно добавлена.
+
+Контроллер:
+```php
+use app\models\Companies;
+
+//Добавить новую компанию
+public function actionCreate()
+{
+    $model = new Companies();
+
+    if ($this->request->isPost) {
+        if ($model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Новая компания успешно добавлена");
+
+            return $this->redirect(['index', 'id' => $model->id]);
+        }
+    } else {
+        $model->loadDefaultValues();
+    }
+
+    return $this->render('create', compact('model'));
+}
+```
+
+Представление ```create```:
+```php
+<?php
+    use yii\helpers\Html;
+
+    $this->title = 'Новая компания';
+    $this->params['breadcrumbs'][] = $this->title;
+?>
+
+<div class="companies-create">
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('_form', ['model' => $model]) ?>
+</div>
+```
+
+Представление ```_form```:
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\bootstrap4\ActiveForm;
+?>
+
+<div class="companies-form">
+    <?php
+        $form = ActiveForm::begin();
+            echo $form->field($model, 'name')->textInput();
+            echo $form->field($model, 'inn')->textInput();
+            echo $form->field($model, 'general_information')->textarea(['rows' => 6]);
+            echo $form->field($model, 'general_manager')->textInput();
+            echo $form->field($model, 'address')->textarea(['rows' => 6]);
+            echo $form->field($model, 'phone')->textInput();
+    ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        </div>
+    <?php ActiveForm::end(); ?>
+</div>
+```
+Десктопная версия:
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/create-company.png" alt = "Добавление компании" />
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
