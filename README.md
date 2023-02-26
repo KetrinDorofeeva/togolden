@@ -4,7 +4,7 @@
   <tr>
     <td><b>Технологии разработки</b></td>
     <td><b>Языки программирования</b></td>
-    <td><b>Фреймворк</b></td>
+    <td><b>Фреймворки</b></td>
     <td><b>База данных</b></td>
   </tr>
   
@@ -18,7 +18,7 @@
    <tr>
     <td><img src = "https://img.shields.io/badge/-CSS-1572B5?style=for-the-badge&logo=CSS3&labelColor=EAEBFE&logoColor=1572B5" alt = "CSS"></td>
     <td><img src = "https://img.shields.io/badge/-JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&labelColor=FFFDF1&logoColor=F7DF1E" alt = "JavaScript"></td>
-    <td></td>
+    <td><img src = "https://img.shields.io/badge/-Bootstrap-800080?style=for-the-badge&logo=Bootstrap&labelColor=F4E7F4&logoColor=800080" alt = "Bootstrap4"></td>
     <td></td>
   </tr>
 </table>
@@ -31,8 +31,6 @@
 - <a href = "#implementation-software-product">Реализация программного продукта</a>
   - <a href = "#main-page">Компании</a>
   - <a href = "#registration">Регистрация</a>
-    - <a href = "#fields-and-their-filling-registration">Поля и их заполнение</a>
-    - <a href = "#layout-registration">Верстка формы регистрации</a>
   - <a href = "#authorization">Авторизация</a>
     - <a href = "#fields-and-their-filling-authorization">Поля и их заполнение</a>
     - <a href = "#layout-authorization">Верстка формы авторизации</a>
@@ -273,7 +271,7 @@ https://user-images.githubusercontent.com/93386515/221371094-e70fec3e-5f47-4239-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "registration">Регистрация</p>
-#### <p id = "fields-and-their-filling-registration">Поля и их заполнение</p>
+Поля и их заполнение:  
 <table>
   <tr>
     <td><b>Поля</b></td>
