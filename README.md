@@ -1240,4 +1240,4 @@ https://user-images.githubusercontent.com/93386515/221418705-4ee45305-e233-4c34-
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
-### <p id = "add-company">Редактировать компанию</p>
+### <p id = "update-company">Редактировать компанию</p>
