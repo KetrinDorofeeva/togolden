@@ -32,8 +32,6 @@
   - <a href = "#main-page">Компании</a>
   - <a href = "#registration">Регистрация</a>
   - <a href = "#authorization">Авторизация</a>
-    - <a href = "#fields-and-their-filling-authorization">Поля и их заполнение</a>
-    - <a href = "#layout-authorization">Верстка формы авторизации</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -447,6 +445,169 @@ public function actionRegistration() {
 ```
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
+
+https://user-images.githubusercontent.com/93386515/221398605-e2cc616f-01ea-4855-b936-6f4cb9345a41.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "authorization">Авторизация</p>
+Поля и их заполнение:
+<table>
+  <tr>
+    <td><b>Поля</b></td>
+    <td><b>Обязательность заполнения</b></td>
+    <td><b>Правила заполнения</b></td>
+  </tr>
+  <tr>
+    <td>Логин</td>
+    <td>Да</td>
+    <td>Введенные данные должны совпадать с данными из таблицы.</td>
+  </tr>
+  <tr>
+    <td>Пароль</td>
+    <td>Да</td>
+    <td>Введенные данные должны совпадать с данными из таблицы.</td>
+  </tr>
+  <tr>
+    <td>Запомнить меня</td>
+    <td>Нет</td>
+    <td></td>
+  </tr>
+</table>
+
+Для того, чтобы доступ к системе имели только авторизированные пользователи, используются фильтры контроля доступа (ACF).  
+**ACF** – это фильтры, которые могут присоединяться к контроллеру или модулю как поведение.
+```php
+public function behaviors()
+{
+    return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'only' => ['logout', 'create', 'update', 'delete'],
+            'rules' => [
+                [
+                    'actions' => ['logout', 'create', 'update', 'delete'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ],
+        'verbs' => [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'logout' => ['post', 'get'],
+            ],
+        ],
+    ];
+}
+```
+
+Код выше показывает ACF фильтр, связанный с контроллером ```SiteController``` через поведение. Параметр ```only``` указывает, что фильтр ACF нужно применять только к действиям ```logout, create, update, delete```. Параметр ```rules``` задает правила доступа, которые означают следующее: разрешить аутентифицированным пользователям доступ к действиям ```logout, create, update, delete```.  
+При попытке доступа к действиям ```logout, create, update, delete``` неавторизированного пользователя перенаправляет на форму авторизации, за которую отвечает метод действия ```actionLogin``` контроллера ```SiteController```. Это действие проверяет, не является ли пользователь гостем. Если условие возвращает ```false```, это значит, что пользователь авторизован и он попадает на главную страницу. Если возвращается ```true``` – создается экземпляр модели ```LoginForm```, в нее загружаются данные и вызывается метод ```login()```, который авторизует пользователя. Если данные загружены и метод ```login()``` вернул ```true```, то пользователь переносится туда, откуда он пришел. В противном случае, передается модель в вид ```login```.  
+
+```php
+//Авторизация
+public function actionLogin()
+{
+    if (!Yii::$app->user->isGuest) {
+        return $this->goHome();
+    }
+
+    $model = new LoginForm();
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        return $this->goBack();
+    }
+
+    $model->password = '';
+    return $this->render('login', compact('model'));
+}
+```
+
+Метод ```login()``` проверяет данные на соответствие правилам, описанных в модели.  Здесь вызывается метод ```validatePassword()```, который при отсутствии ошибок создает объект ```User```, вызывая метод ```getUser()```. Метод проверяет, не авторизован ли пользователь. Если не авторизован – вызывается статический метод ```findByUsername()``` с переданным ему введенным именем пользователя класса ```User```.  
+Модель ```User``` реализует интерфейс ```yii\web\IdentityInterface```. В данной моделе должно быть объявлено семь методов:
+
+<table>
+  <tr>
+    <td><b>Методы</b></td>
+    <td><b>Описание</b></td>
+  </tr>
+  <tr>
+    <td>findIdentity()</td>
+    <td>Данный метод находит экземпляр <code>identity class</code>, используя ID пользователя.</td>
+  </tr>
+  <tr>
+    <td>findIdentityByAccessToken()</td>
+    <td>Данный метод находит экземпляр <code>identity class</code>, используя токен доступа. Метод используется, когда требуется аутентифицировать пользователя только по секретному токену.</td>
+  </tr>
+  <tr>
+    <td>findByUsername()</td>
+    <td>Данный метод находит пользователя по его логину.</td>
+  </tr>
+  <tr>
+    <td>getId()</td>
+    <td>Данный метод возвращает ID пользователя, представленного данным экземпляром <code>identity</code>.</td>
+  </tr>
+  <tr>
+    <td>getAuthKey()</td>
+    <td>Данный метод возвращает ключ, используемый для основанной на cookie аутентификации. Ключ сохраняется в аутентификационной cookie и позже сравнивается с версией, находящейся на сервере, чтобы удостоверится, что аутентификационная cookie верная.</td>
+  </tr>
+  <tr>
+    <td>validateAuthKey()</td>
+    <td>Данный метод реализует логику проверки ключа для основанной на cookie аутентификации.</td>
+  </tr>
+  <tr>
+    <td>validatePassword()</td>
+    <td>Данный метод сравнивает хранящийся в базе данных пароль с тем, что ввел пользователь.</td>
+  </tr>
+</table>
+
+А так же объявляется метод ```tableName()```, который укажет, что модель ```User``` будет взаимодействовать с таблицей ```user```.
+
+```php
+namespace app\models;
+use yii\db\ActiveRecord;
+
+class User extends ActiveRecord implements \yii\web\IdentityInterface
+{
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+
+    }
+
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->auth_key === $authKey;
+    }
+
+    public function validatePassword($password)
+    {
+        return $this->password === md5($password);
+    }
+}
+```
+
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
 
 
