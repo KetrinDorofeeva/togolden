@@ -32,6 +32,7 @@
   - <a href = "#main-page">Компании</a>
   - <a href = "#registration">Регистрация</a>
   - <a href = "#authorization">Авторизация</a>
+  - <a href = "#company-page">Страница компании</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -395,6 +396,8 @@ class RegistrationForm extends ActiveRecord {
 Передача введенных и автоматически прописанных данных, а именно ``username, password, confirm_password`` происходит при помощи метода ``render``, куда первым параметром поступает строка – название представления и информация, передаваемая представлению.  
 В модели ``RegistrationForm`` прописана функция ``registration``, в которой проверяется валидность введенных данных при помощи метода ``$this->validate()``. Для безопасного хранения и использования хэшированных паролей в базе данных используется ``md5``. Если данных успешно прошли проверку на валидность, определяется ``id`` зарегистрированного пользователя, используя выражение ``Yii::$app->user->login(User::findIdentity($this->id))``. Оно возвращает экземпляр класса идентификатора, представляющего текущего пользователя, вошедшего в систему.  
 ```php
+use app\models\RegistrationForm;
+
 //Регистрация
 public function actionRegistration() {
     $model = new RegistrationForm();
@@ -507,6 +510,8 @@ public function behaviors()
 При попытке доступа к действиям ```logout, create, update, delete``` неавторизированного пользователя перенаправляет на форму авторизации, за которую отвечает метод действия ```actionLogin``` контроллера ```SiteController```. Это действие проверяет, не является ли пользователь гостем. Если условие возвращает ```false```, это значит, что пользователь авторизован и он попадает на главную страницу. Если возвращается ```true``` – создается экземпляр модели ```LoginForm```, в нее загружаются данные и вызывается метод ```login()```, который авторизует пользователя. Если данные загружены и метод ```login()``` вернул ```true```, то пользователь переносится туда, откуда он пришел. В противном случае, передается модель в вид ```login```.  
 
 ```php
+use app\models\LoginForm;
+
 //Авторизация
 public function actionLogin()
 {
@@ -642,6 +647,488 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
 https://user-images.githubusercontent.com/93386515/221399581-fd8e6fc4-d8fd-4393-a4a6-f14af0b7d212.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "company-page">Страница компании</p>
+В зависимости от того, авторизован ли пользователь, на странице компании отображаются определенные элементы.  
+Страница компании, как гостя, так и авторизованного пользователя, включает в себя расширенную информацию. Каждая компания имеет информацию: название компании, ИНН, общая информация, генеральный директор, адрес и телефон.  
+
+Авторизованный пользователь имеет возможность:
+1)  К каждому полю каждой компании оставить комментарии;
+2)  Оставить комментарий к компании целиком;
+3)  Видеть комментарии других пользователей.
+
+Каждый комментарий включает в себя: время добавление, логин пользователя и текст комментария.  
+Реализована интерактивность добавления комментария (поле ввода по умолчанию скрыто, открывается по желанию пользователя, закрывается после сохранения).
+
+Контроллер:
+```php
+use app\models\Companies;
+use app\models\Comments;
+    
+//Страница компании
+public function actionView($id)
+{
+    $model = Companies::findOne(['id' => $id]);
+    $model_c = Comments::find($id)->where(['=', 'id_company', $id])->orderBy(['time_comment' => SORT_DESC])->all();
+
+    //Добавить комментарий
+    $model_cr = new Comments();
+
+    if ($model_cr->load(Yii::$app->request->post())) {
+        $model_cr->id_company = $id;
+        $model_cr->id_user = Yii::$app->user->identity->id;
+        $model_cr->time_comment = date('Y-m-d H:i:s');
+
+        Yii::$app->session->setFlash('success', "Комментарий успешно добавлен");
+
+        if ($model_cr->save(false)) {
+            return $this->redirect(['view', 'id' => $id]);
+        }
+    }
+
+    return $this->render('view', compact('model', 'model_c', 'model_cr'));
+}
+```
+
+Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
+Модуль Comments:
+```php
+namespace app\models;
+
+use Yii;
+
+class Comments extends \yii\db\ActiveRecord
+{
+    public static function tableName()
+    {
+        return 'comments';
+    }
+
+    public function rules()
+    {
+        return [
+            [['id_company', 'id_user', 'time_comment'], 'required'],
+            [['name_comment', 'inn_comment', 'general_information_comment', 'general_manager_comment', 'address_comment', 'phone_comment', 'general_comment'], 'string'],
+            [['time_comment'], 'safe'],
+            [['id_company'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::class, 'targetAttribute' => ['id_company' => 'id']],
+            [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'name_comment' => '',
+            'inn_comment' => '',
+            'general_information_comment' => '',
+            'general_manager_comment' => '',
+            'address_comment' => '',
+            'phone_comment' => '',
+            'general_comment' => '',
+        ];
+    }
+
+    //Связь комментария с компанией
+    public function getCompany()
+    {
+        return $this->hasOne(Companies::class, ['id' => 'id_company']);
+    }
+
+    //Связь комментария с пользователем
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+}
+```
+
+Представление:
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\widgets\DetailView;
+    use yii\bootstrap4\ActiveForm;
+
+    $this->title = $model->name;
+    $this->params['breadcrumbs'][] = $this->title;
+?>
+
+<style>
+    .alert-success.alert.alert-dismissible {
+        margin-left: 0px;
+    }
+</style>
+
+<br><div class="companies-view">
+    <div id="accordion">
+        <div class="card">
+            <!--Название-->
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'name',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+                    
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewNameCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->name_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->name_comment . "</span><br>";
+                                }
+                            }
+                        ?>
+                        
+                        <!--Комментарии к названию компании-->
+                        <div class="comments-form" id="add_name_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_nam_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'name_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!--ИНН-->
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'inn',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewAddInnCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                     <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->inn_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->inn_comment . "</span><br>";
+                                }
+                            } 
+                        ?>
+
+                        <!--Комментарии к ИНН компании-->
+                        <div class="comments-form" id="add_inn_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_in_n_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'inn_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!--Общая информация-->
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'general_information',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewGenInfCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseThree" class="collapse show" aria-labelledby="headingThree">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->general_information_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->general_information_comment . "</span><br>";
+                                }
+                            }
+                        ?>
+
+                        <!--Комментарии к общую информацию компании-->
+                        <div class="comments-form" id="add_general_information_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_gen_inf_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'general_information_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!--Генеральный директор-->
+            <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'general_manager',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewGenManCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseFour" class="collapse show" aria-labelledby="headingFour">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->general_manager_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->general_manager_comment . "</span><br>";
+                                }
+                            }
+                        ?>
+
+                        <!--Комментарии к генеральному директору компании-->
+                        <div class="comments-form" id="add_general_manager_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_gen_man_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'general_manager_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!--Адрес-->
+            <div class="card-header" id="headingFive">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'address',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewAddressCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseFive" class="collapse show" aria-labelledby="headingFive">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->address_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->address_comment . "</span><br>";
+                                }
+                            }
+                        ?>
+
+                        <!--Комментарии к адресу компании-->
+                        <div class="comments-form" id="add_address_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_addr_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'address_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!--Телефон-->
+            <div class="card-header" id="headingSix">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        <?=
+                            DetailView::widget([
+                                'model' => $model,
+                                'attributes' => [
+                                    'phone',
+                                ],
+                            ]);
+                        ?>
+                    </button>
+
+                    <?php
+                        if (!Yii::$app->user->isGuest) { ?>
+                            <span class="comment_chat" onmousedown = "viewPhoneCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
+                </h5>
+            </div>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div id="collapseSix" class="collapse show" aria-labelledby="headingSix">
+                    <div class="card-body">
+                        <?php
+                            foreach ($model_c as $comment) {
+                                if ($comment->phone_comment !== NULL) {
+                                    echo "<span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                                    "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                                    "<span style='margin-left: 10px'>" . $comment->phone_comment . "</span><br>";
+                                }
+                            }
+                        ?>
+
+                        <!--Комментарии к телефону компании-->
+                        <div class="comments-form" id="add_phone_comment">
+                            <?php $form = ActiveForm::begin([
+                                'id' => 'add_ph_comment',
+                                'method' => 'post',
+                            ]);
+
+                                echo $form->field($model_cr, 'phone_comment')->textInput();
+                                echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                            ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div><br>
+        
+        <!--Общие комментарии-->
+        <?php if (!Yii::$app->user->isGuest) { ?>
+            <span style="color: #FFC134; font-weight: bold; font-size: 25px">Общие комментарии</span>
+            <span style="float: right; color: #eea90a; cursor: pointer" onmousedown = "viewGenCom()">Прокомментировать компанию <img style="width: 25px" src="/web/img/chat-fill.svg"></span>
+    
+            <?php foreach ($model_c as $comment) {
+                if ($comment->general_comment !== NULL) {
+                    echo "<div style='border-top: 1px solid #DFDFDF; margin-top: 25px'>";
+                        echo "<br><span style='color: #7D7C7C'>" . $comment->time_comment . "</span>" .
+                        "<span style='margin-left: 10px; color: #eea90a'>" . $comment->user->username . ":" . "</span>" .
+                        "<span style='margin-left: 10px'>" . $comment->general_comment . "</span>";
+                    echo "</div>";
+                }
+            } ?>
+
+            <div class="comments-form" id="add_general_comment">
+                <?php $form = ActiveForm::begin([
+                    'id' => 'add_gen_comment',
+                    'method' => 'post',
+                ]);
+
+                    echo $form->field($model_cr, 'general_comment')->textarea(['rows' => 6]);
+                    echo Html::submitButton('Добавить комментарий', ['class' => 'btn btn-success']);
+                ActiveForm::end(); ?>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+```
+
+Создаем файл ```script.js``` в папке ```/web/js```:
+```js
+//При клике появляется поле для ввода комментария и кнопка
+//Название
+function viewNameCom() {
+    document.getElementById("add_name_comment").style.display = "block";
+};
+
+//ИНН
+function viewAddInnCom() {
+    document.getElementById("add_inn_comment").style.display = "block";
+}
+
+//Общая информация
+function viewGenInfCom() {
+    document.getElementById("add_general_information_comment").style.display = "block";
+};
+
+//Генеральный директор
+function viewGenManCom() {
+    document.getElementById("add_general_manager_comment").style.display = "block";
+};
+
+//Адрес
+function viewAddressCom() {
+    document.getElementById("add_address_comment").style.display = "block";
+};
+
+//Телефон
+function viewPhoneCom() {
+    document.getElementById("add_phone_comment").style.display = "block";
+};
+
+//Общие комментарии
+function viewGenCom() {
+    document.getElementById("add_general_comment").style.display = "block";
+};
+```
+
+Десктопная версия (гость):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page (guest).png" alt = "Страница компании (гость)" />
+
+Десктопная версия (пользователь):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_1 (user).png" alt = "Страница компании_1 (пользователь)" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" />
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
