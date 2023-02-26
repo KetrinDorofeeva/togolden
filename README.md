@@ -1230,7 +1230,7 @@ public function actionCreate()
     <?php ActiveForm::end(); ?>
 </div>
 ```
-Десктопная версия:
+Десктопная версия:  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/create-company.png" alt = "Добавление компании" />
 
 Мобильная версия:
@@ -1313,10 +1313,14 @@ public function actionUpdate($id)
     <?php ActiveForm::end(); ?>
 </div>
 ```
-Десктопная версия:
+Десктопная версия:  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/update-company.png" alt = "Редактирование компании" />
 
 Мобильная версия:
 
+https://user-images.githubusercontent.com/93386515/221420060-30c2abe8-b2ab-45d5-a2b0-246ce2cdd27f.mp4
+
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "delete-company">Удалить компанию</p>
