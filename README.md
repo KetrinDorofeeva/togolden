@@ -1348,9 +1348,11 @@ public function actionDelete($id)
 Изображение корзины, при нажатии на которую удаляется компания (и относящиеся к ней комментарии), находится в представлении ```index```, которое указано в подразделе  <a href = "#main-page">Компании</a>.
 
 Десктопная версия:  
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/delete-company.png" alt = Удалить компанию" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/delete-company.png" alt = "Удаление компании" />
 
 Мобильная версия:  
+
+https://user-images.githubusercontent.com/93386515/221426003-4a0dcee2-edd2-4db1-85d5-2425af9faee2.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
