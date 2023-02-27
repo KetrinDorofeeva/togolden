@@ -125,10 +125,14 @@
             $model = new Companies();
     
             if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
+                if ($model->load($this->request->post())) {
+                    $model->id_user = Yii::$app->user->identity->id;
+
                     Yii::$app->session->setFlash('success', "Новая компания успешно добавлена");
                     
-                    return $this->redirect(['index', 'id' => $model->id]);
+                    if ($model->save()) {
+                        return $this->redirect(['index', 'id' => $model->id]);
+                    }
                 }
             } else {
                 $model->loadDefaultValues();

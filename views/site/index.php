@@ -20,7 +20,7 @@
                                 echo "<span class = 'title_company'>Генеральный директор: </span>" . $company->general_manager;
                             echo "</a>";
 
-                            if (!Yii::$app->user->isGuest) {
+                            if (!Yii::$app->user->isGuest && \Yii::$app->user->identity->id == $company->id_user) {
                                 echo "<div style='margin-left: 96%'>" .
                                     "<div style='padding-bottom: 15px'>" . Html::a(Html::img('@web/img/pencil-fill.svg'), ['update', 'id' => $company->id]) . "</div>" .
 
