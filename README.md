@@ -452,7 +452,7 @@ public function actionRegistration() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
 
-https://user-images.githubusercontent.com/93386515/221531799-1705efdc-367e-44c1-9711-62b9a767a8f6.mp4
+https://user-images.githubusercontent.com/93386515/221588092-1da93394-e1d5-47fe-88bf-0bf9f3866259.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -664,7 +664,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
-https://user-images.githubusercontent.com/93386515/221532851-fbb46269-241c-477b-887f-7affddf4f99a.mp4
+https://user-images.githubusercontent.com/93386515/221588801-c8a3509b-931e-41cc-a3e1-617f4e0e0ff4.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -1239,7 +1239,7 @@ public function actionCreate()
 
 Мобильная версия:
 
-https://user-images.githubusercontent.com/93386515/221537012-6844aa4f-7c71-4842-a2d3-1f09006ba18e.mp4
+https://user-images.githubusercontent.com/93386515/221591283-70506e7c-596f-4c3c-8f08-fb38a7208f8d.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -1323,7 +1323,7 @@ public function actionUpdate($id)
 
 Мобильная версия:
 
-https://user-images.githubusercontent.com/93386515/221538554-461e6ed6-9d41-4008-82ea-af98c0b16f91.mp4
+https://user-images.githubusercontent.com/93386515/221592146-ebca03a0-e401-48ba-802d-fa3b9052e81f.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -1356,7 +1356,7 @@ public function actionDelete($id)
 
 Мобильная версия:  
 
-https://user-images.githubusercontent.com/93386515/221541177-1b7e746e-7a0b-4c17-a091-6aecf821490e.mp4
+https://user-images.githubusercontent.com/93386515/221593471-e8fab1c6-523c-4879-8c40-720a078e3341.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
