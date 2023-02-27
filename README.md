@@ -258,7 +258,7 @@ class Companies extends \yii\db\ActiveRecord
 
 Мобильная версия (гость):
 
-https://user-images.githubusercontent.com/93386515/221370287-c783c671-14af-4eda-abf0-09b27703af69.mp4
+https://user-images.githubusercontent.com/93386515/221585366-692c3b2c-8b94-4671-a42f-ec39e3a0e31f.mp4
 
 <br>
 Авторизованный пользователь на странице компаний имеет возможность: добавлять компании, а также редактировать и удалять созданные им компании.<br>
@@ -267,7 +267,7 @@ https://user-images.githubusercontent.com/93386515/221370287-c783c671-14af-4eda-
 
 Мобильная версия (пользователь):
 
-https://user-images.githubusercontent.com/93386515/221371094-e70fec3e-5f47-4239-95a6-d45dc275de33.mp4
+https://user-images.githubusercontent.com/93386515/221586561-f70d0fb7-3989-4d5e-9f37-d67f546bbca7.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
