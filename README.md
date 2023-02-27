@@ -220,7 +220,7 @@ class Companies extends \yii\db\ActiveRecord
                                 echo "<span class = 'title_company'>Генеральный директор: </span>" . $company->general_manager;
                             echo "</a>";
 
-                            if (!Yii::$app->user->isGuest) {
+                            if (!Yii::$app->user->isGuest && \Yii::$app->user->identity->id == $company->id_user) {
                                 echo "<div style='margin-left: 96%'>" .
                                     "<div style='padding-bottom: 15px'>" . Html::a(Html::img('@web/img/pencil-fill.svg'), ['update', 'id' => $company->id]) . "</div>" .
 
@@ -261,7 +261,7 @@ class Companies extends \yii\db\ActiveRecord
 https://user-images.githubusercontent.com/93386515/221370287-c783c671-14af-4eda-abf0-09b27703af69.mp4
 
 <br>
-Авторизованный пользователь на странице компаний имеет возможность: добавлять, редактировать и удалять компании.<br>
+Авторизованный пользователь на странице компаний имеет возможность: добавлять компании, а также редактировать и удалять созданные им компании.<br>
 Десктопная версия (пользователь):  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (user).png" alt = "Компании (пользователь)" />
 
@@ -452,7 +452,7 @@ public function actionRegistration() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
 
-https://user-images.githubusercontent.com/93386515/221398605-e2cc616f-01ea-4855-b936-6f4cb9345a41.mp4
+https://user-images.githubusercontent.com/93386515/221531799-1705efdc-367e-44c1-9711-62b9a767a8f6.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -664,7 +664,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
-https://user-images.githubusercontent.com/93386515/221399581-fd8e6fc4-d8fd-4393-a4a6-f14af0b7d212.mp4
+https://user-images.githubusercontent.com/93386515/221532851-fbb46269-241c-477b-887f-7affddf4f99a.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -1177,10 +1177,14 @@ public function actionCreate()
     $model = new Companies();
 
     if ($this->request->isPost) {
-        if ($model->load($this->request->post()) && $model->save()) {
+        if ($model->load($this->request->post())) {
+            $model->id_user = Yii::$app->user->identity->id;
+
             Yii::$app->session->setFlash('success', "Новая компания успешно добавлена");
 
-            return $this->redirect(['index', 'id' => $model->id]);
+            if ($model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            }
         }
     } else {
         $model->loadDefaultValues();
@@ -1235,7 +1239,7 @@ public function actionCreate()
 
 Мобильная версия:
 
-https://user-images.githubusercontent.com/93386515/221418705-4ee45305-e233-4c34-a514-4b62f7519170.mp4
+https://user-images.githubusercontent.com/93386515/221537012-6844aa4f-7c71-4842-a2d3-1f09006ba18e.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -1319,7 +1323,7 @@ public function actionUpdate($id)
 
 Мобильная версия:
 
-https://user-images.githubusercontent.com/93386515/221420060-30c2abe8-b2ab-45d5-a2b0-246ce2cdd27f.mp4
+https://user-images.githubusercontent.com/93386515/221538554-461e6ed6-9d41-4008-82ea-af98c0b16f91.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
