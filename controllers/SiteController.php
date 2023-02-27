@@ -55,7 +55,7 @@
         {
             $query = Companies::find();
             $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => 6]);
-            $model = $query->offset($pages->offset)->limit($pages->limit)->all();
+            $model = $query->offset($pages->offset)->limit($pages->limit)->orderBy(['id' => SORT_DESC])->all();
 
             return $this->render('index', compact('model', 'pages'));
         }
