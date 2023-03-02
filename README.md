@@ -36,6 +36,7 @@
   - <a href = "#add-company">Добавить компанию</a>
   - <a href = "#update-company">Редактировать компанию</a>
   - <a href = "#delete-company">Удалить компанию</a>
+  - <a href = "#my-company">Мои компании</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -1362,6 +1363,137 @@ public function actionDelete($id)
 Мобильная версия:  
 
 https://user-images.githubusercontent.com/93386515/222397061-e0570ffa-2dc1-4afe-b134-88c7e5f61136.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "my-company">Мои компании</p>
+Поля каждой компании:
+1) Название;
+2) ИНН;
+3) Общая информация;
+4) Генеральный директор;
+5) Адрес;
+6) Телефон.
+
+Контроллер:
+```php
+use app\models\CompaniesSearch;
+ 
+//Мои компании
+public function actionMy()
+{
+    $searchModel = new CompaniesSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    return $this->render('my', compact('searchModel', 'dataProvider'));
+}
+```
+
+Модуль:
+```php
+namespace app\models;
+
+use yii\base\Model;
+use yii\data\ActiveDataProvider;
+use app\models\Companies;
+
+class CompaniesSearch extends Companies
+{
+    public function rules()
+    {
+        return [
+            [['id', 'id_user', 'inn'], 'integer'],
+            [['name', 'general_information', 'general_manager', 'address', 'phone'], 'safe'],
+        ];
+    }
+
+    public function scenarios()
+    {
+        return Model::scenarios();
+    }
+
+    public function search($params)
+    {
+        $query = Companies::find()->where(['id_user' => \Yii::$app->user->identity->id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'id_user' => $this->id_user,
+            'inn' => $this->inn,
+        ]);
+
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'general_information', $this->general_information])
+            ->andFilterWhere(['like', 'general_manager', $this->general_manager])
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->orderBy(['id' => SORT_DESC]);
+
+        return $dataProvider;
+    }
+}
+```
+
+Представление:
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\grid\GridView;
+
+    $this->title = 'Главная';
+    $this->params['breadcrumbs'][] = 'Мои компании';
+?>
+
+<div class="my-index">
+    <h1>Мои компании</h1>
+
+    <div class="mt-4">
+        <?php
+            echo Html::a('Новая компания', ['create'], ['class' => 'btn btn-success']);
+        ?>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                [
+                    'attribute' => 'name',
+                    'format' => 'raw',
+                    'value' => function($data) {
+                        return '<a href = "/site/view/'.$data->id.'">' . $data->name . '</a>';
+                    }
+                ],
+                'inn',
+                'general_information',
+                'general_manager',
+                'address',
+                'phone',
+
+                ['class' => 'yii\grid\ActionColumn'],
+            ],
+        ]); ?>
+    </div>
+</div>
+```
+
+Десктопная версия (компаний нет):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/my-companies (no).png" alt = "Мои компании (компаний нет)" />
+
+Десктопная версия (компания есть):  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/my-companies (yes).png" alt = "Мои компании (компания есть)" />
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
