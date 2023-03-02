@@ -1361,7 +1361,7 @@ public function actionDelete($id)
 
 Мобильная версия:  
 
-https://user-images.githubusercontent.com/93386515/221593471-e8fab1c6-523c-4879-8c40-720a078e3341.mp4
+https://user-images.githubusercontent.com/93386515/222397061-e0570ffa-2dc1-4afe-b134-88c7e5f61136.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
