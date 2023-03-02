@@ -1495,5 +1495,9 @@ class CompaniesSearch extends Companies
 Десктопная версия (компания есть):  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/my-companies (yes).png" alt = "Мои компании (компания есть)" />
 
+Десктопная версия (несколько компаний), а также поиск:  
+
+https://user-images.githubusercontent.com/93386515/222405787-190bf6c9-9856-4d27-8fc2-0b1504d70b73.mp4
+
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
