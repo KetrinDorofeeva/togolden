@@ -1286,6 +1286,7 @@ public function actionUpdate($id)
     use yii\helpers\Html;
 
     $this->title = 'Редактировать компанию ' . $model->name;
+    $this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['my']];
     $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
     $this->params['breadcrumbs'][] = 'Редактировать компанию ' . $model->name;
 ?>
@@ -1327,7 +1328,7 @@ public function actionUpdate($id)
 
 Мобильная версия:
 
-https://user-images.githubusercontent.com/93386515/221592146-ebca03a0-e401-48ba-802d-fa3b9052e81f.mp4
+https://user-images.githubusercontent.com/93386515/222395436-ad1d4ceb-d96b-456e-893c-eaaf9b65eb57.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
