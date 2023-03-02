@@ -267,7 +267,7 @@ https://user-images.githubusercontent.com/93386515/221585366-692c3b2c-8b94-4671-
 
 Мобильная версия (пользователь):
 
-https://user-images.githubusercontent.com/93386515/221586561-f70d0fb7-3989-4d5e-9f37-d67f546bbca7.mp4
+https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-b495-3da662f9ccc1.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
