@@ -1203,6 +1203,7 @@ public function actionCreate()
     use yii\helpers\Html;
 
     $this->title = 'Новая компания';
+    $this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['my']];
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 
