@@ -40,6 +40,12 @@
                 'visible' => !Yii::$app->user->isGuest,
             ],
             [
+                'label' => '<span class="ml-3">' . 'Мои компании' . '</span>',
+                'encode' => false,
+                'url' => ['/site/my'],
+                'visible' => !Yii::$app->user->isGuest
+            ],
+            [
                 'label' => '<span class="ml-3">' . Html::tag('span', 'Компании', ['class' => 'mr-3']) . '</span>',
                 'encode' => false,
                 'url' => ['/site/index'],

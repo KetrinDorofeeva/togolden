@@ -9,6 +9,7 @@
     use app\models\RegistrationForm;
     use app\models\LoginForm;
     use app\models\Companies;
+    use app\models\CompaniesSearch;
     use app\models\Comments;
     use yii\data\Pagination;
 
@@ -19,10 +20,10 @@
             return [
                 'access' => [
                     'class' => AccessControl::className(),
-                    'only' => ['logout', 'create', 'update', 'delete'],
+                    'only' => ['logout', 'my', 'create', 'update', 'delete'],
                     'rules' => [
                         [
-                            'actions' => ['logout', 'create', 'update', 'delete'],
+                            'actions' => ['logout', 'my', 'create', 'update', 'delete'],
                             'allow' => true,
                             'roles' => ['@'],
                         ],
@@ -58,6 +59,15 @@
             $model = $query->offset($pages->offset)->limit($pages->limit)->orderBy(['id' => SORT_DESC])->all();
 
             return $this->render('index', compact('model', 'pages'));
+        }
+
+        //Мои компании
+        public function actionMy()
+        {
+            $searchModel = new CompaniesSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            return $this->render('my', compact('searchModel', 'dataProvider'));
         }
 
         //Регистрация

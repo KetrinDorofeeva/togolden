@@ -2,6 +2,7 @@
     use yii\helpers\Html;
 
     $this->title = 'Редактировать компанию ' . $model->name;
+    $this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['my']];
     $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
     $this->params['breadcrumbs'][] = 'Редактировать компанию ' . $model->name;
 ?>

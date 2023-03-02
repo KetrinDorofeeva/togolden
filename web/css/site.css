@@ -47,27 +47,35 @@ main > .container { padding: 70px 15px 20px }
     text-decoration: none;
 }
 
-.table { margin: 0em }
+.companies-view .table { margin: 0em }
 
 .card-header { background: white }
 
 .card .collapse.show { background: #F7F7F7 }
 
-.table tr { background: white !important }
+.companies-view .table tr { background: white !important }
 
-.table-bordered,
-.table-bordered th,
-.table-bordered td {
+.companies-view .table-bordered,
+.companies-view .table-bordered th,
+.companies-view .table-bordered td {
     border: none !important;
 }
 
-.table-bordered th {
+.companies-view .table-bordered th {
     color: #FFC134;
     padding-left: 0;
     text-align: left;
 }
 
-.table-bordered td { text-align: left }
+.companies-view .table-bordered td { text-align: left }
+
+.my-index thead td { background: rgba(0, 0, 0, 0.05) }
+
+.my-index th a { color: #eea90a }
+
+.my-index td { background: white }
+
+.my-index td a { color: #eea90a }
 
 .comment_chat {
     float: right;
@@ -87,6 +95,8 @@ main > .container { padding: 70px 15px 20px }
 #add_general_comment {
     display: none;
 }
+
+.my-index .grid-view .pagination { display: none }
 
 .pagination > li > a, .pagination > li > span {
     color: #343a40;

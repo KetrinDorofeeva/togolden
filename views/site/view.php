@@ -4,6 +4,9 @@
     use yii\bootstrap4\ActiveForm;
 
     $this->title = $model->name;
+    if (!Yii::$app->user->isGuest) {
+        $this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['my']];
+    }
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 
