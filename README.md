@@ -452,7 +452,7 @@ public function actionRegistration() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
 
-https://user-images.githubusercontent.com/93386515/221588092-1da93394-e1d5-47fe-88bf-0bf9f3866259.mp4
+https://user-images.githubusercontent.com/93386515/222385674-795216de-e92b-4b03-8243-309834295069.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -493,10 +493,10 @@ public function behaviors()
     return [
         'access' => [
             'class' => AccessControl::className(),
-            'only' => ['logout', 'create', 'update', 'delete'],
+            'only' => ['logout', 'my', 'create', 'update', 'delete'],
             'rules' => [
                 [
-                    'actions' => ['logout', 'create', 'update', 'delete'],
+                    'actions' => ['logout', 'my', 'create', 'update', 'delete'],
                     'allow' => true,
                     'roles' => ['@'],
                 ],
@@ -664,7 +664,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
-https://user-images.githubusercontent.com/93386515/221588801-c8a3509b-931e-41cc-a3e1-617f4e0e0ff4.mp4
+https://user-images.githubusercontent.com/93386515/222386988-57ee7419-a89e-4a46-b754-740a1cb1fd4a.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -771,6 +771,9 @@ class Comments extends \yii\db\ActiveRecord
     use yii\bootstrap4\ActiveForm;
 
     $this->title = $model->name;
+    if (!Yii::$app->user->isGuest) {
+        $this->params['breadcrumbs'][] = ['label' => 'Мои компании', 'url' => ['my']];
+    }
     $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -1149,7 +1152,7 @@ function viewGenCom() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" /><br><br>
 
-https://user-images.githubusercontent.com/93386515/221404465-144c91d2-d8c5-4f24-b824-f552a8a6649a.mp4
+https://user-images.githubusercontent.com/93386515/222390277-bebe345b-05ee-4f62-bcc9-87b00fa174af.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
