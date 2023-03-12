@@ -209,32 +209,30 @@ class Companies extends \yii\db\ActiveRecord
 <div class="container">
     <div class="body-content">
         <div class="row">
-            <?php
-                foreach ($model as $company) {
-            ?>
-                    <div class="col-lg-3 bg-dark company_block">
-                        <?php 
-                            echo "<a href = '/site/view/$company->id'>";
-                                echo "<span style='color: #FFC134; font-weight: bold'>" . $company->name . "</span><br>";
-                                echo "<span class = 'title_company'>Адрес: </span>" . $company->address . "<br>";
-                                echo "<span class = 'title_company'>Телефон: </span>" . $company->phone . "<br>";
-                                echo "<span class = 'title_company'>Генеральный директор: </span>" . $company->general_manager;
-                            echo "</a>";
+            <?php foreach ($model as $company) { ?>
+                <div class="col-lg-3 bg-dark company_block">
+                    <?php 
+                        echo "<a href = '/site/view/$company->id'>";
+                            echo "<span style='color: #FFC134; font-weight: bold'>" . $company->name . "</span><br>";
+                            echo "<span class = 'title_company'>Адрес: </span>" . $company->address . "<br>";
+                            echo "<span class = 'title_company'>Телефон: </span>" . $company->phone . "<br>";
+                            echo "<span class = 'title_company'>Генеральный директор: </span>" . $company->general_manager;
+                        echo "</a>";
 
-                            if (!Yii::$app->user->isGuest && \Yii::$app->user->identity->id == $company->id_user) {
-                                echo "<div style='margin-left: 96%'>" .
-                                    "<div style='padding-bottom: 15px'>" . Html::a(Html::img('@web/img/pencil-fill.svg'), ['update', 'id' => $company->id]) . "</div>" .
+                        if (!Yii::$app->user->isGuest && \Yii::$app->user->identity->id == $company->id_user) {
+                            echo "<div style='margin-left: 96%'>" .
+                                "<div style='padding-bottom: 15px'>" . Html::a(Html::img('@web/img/pencil-fill.svg'), ['update', 'id' => $company->id]) . "</div>" .
 
-                                    Html::a(Html::img('@web/img/trash-fill.svg'), ['delete', 'id' => $company->id], [
-                                        'data' => [
-                                            'confirm' => 'Вы уверены, что хотите удалить эту компанию?',
-                                            'method' => 'post',
-                                        ]
-                                    ]) .
-                                "</div>";
-                            }
-                        ?>
-                    </div>
+                                Html::a(Html::img('@web/img/trash-fill.svg'), ['delete', 'id' => $company->id], [
+                                    'data' => [
+                                        'confirm' => 'Вы уверены, что хотите удалить эту компанию?',
+                                        'method' => 'post',
+                                    ]
+                                ]) .
+                            "</div>";
+                        }
+                    ?>
+                </div>
             <?php } ?>
         </div>
 
@@ -801,9 +799,8 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
                     
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewNameCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewNameCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -849,10 +846,9 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewAddInnCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
-                     <?php } ?>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewAddInnCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
                 </h5>
             </div>
             <?php if (!Yii::$app->user->isGuest) { ?>
@@ -897,9 +893,8 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewGenInfCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewGenInfCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -945,9 +940,8 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewGenManCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewGenManCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -993,9 +987,8 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewAddressCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewAddressCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -1041,9 +1034,8 @@ class Comments extends \yii\db\ActiveRecord
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewPhoneCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewPhoneCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
