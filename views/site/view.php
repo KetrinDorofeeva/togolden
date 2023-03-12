@@ -33,9 +33,8 @@
                         ?>
                     </button>
                     
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewNameCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewNameCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -81,10 +80,9 @@
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewAddInnCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
-                     <?php } ?>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewAddInnCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php } ?>
                 </h5>
             </div>
             <?php if (!Yii::$app->user->isGuest) { ?>
@@ -129,9 +127,8 @@
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewGenInfCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewGenInfCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -177,9 +174,8 @@
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewGenManCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewGenManCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -225,9 +221,8 @@
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewAddressCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewAddressCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
@@ -273,9 +268,8 @@
                         ?>
                     </button>
 
-                    <?php
-                        if (!Yii::$app->user->isGuest) { ?>
-                            <span class="comment_chat" onmousedown = "viewPhoneCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                        <span class="comment_chat" onmousedown = "viewPhoneCom()">Прокомментировать <img style="width: 20px" src="/web/img/chat-fill.svg"></span>
                     <?php } ?>
                 </h5>
             </div>
