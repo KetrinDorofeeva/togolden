@@ -822,8 +822,8 @@ public function actionView($id)
 }
 ```
 
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
-Модуль Comments:
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>.<br>  
+Модуль ```Comments```:
 ```php
 namespace app\models;
 
@@ -1257,13 +1257,13 @@ function viewGenCom() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" /><br><br>
 
-https://user-images.githubusercontent.com/93386515/222390277-bebe345b-05ee-4f62-bcc9-87b00fa174af.mp4
+https://user-images.githubusercontent.com/93386515/226183660-c364845d-ebd6-4b30-b0fd-525c817afbb7.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "add-company">Добавить компанию</p>
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>. 
 
 Поля для заполнения:  
 1)  Название;
@@ -1354,7 +1354,7 @@ https://user-images.githubusercontent.com/93386515/221591283-70506e7c-596f-4c3c-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "update-company">Редактировать компанию</p>
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>. 
 
 Поля для редактирования:  
 1)  Название;
@@ -1458,7 +1458,7 @@ public function actionDelete($id)
 }
 ```
 
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>.  
 Изображение корзины, при нажатии на которую удаляется компания (и относящиеся к ней комментарии), находится в представлении ```index```, которое указано в подразделе  <a href = "#main-page">Компании</a>.
 
 Десктопная версия:  
