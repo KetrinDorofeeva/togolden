@@ -560,10 +560,10 @@ function init() {
 <script src = "script.js"></script>
 ```
 
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_1.png" alt = "Регистрация" />  
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_2.png" alt = "Регистрация" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_1.png" alt = "Регистрация (1)" />  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_2.png" alt = "Регистрация (2)" />
 
-https://user-images.githubusercontent.com/93386515/222385674-795216de-e92b-4b03-8243-309834295069.mp4
+https://user-images.githubusercontent.com/93386515/226170009-55e2e7ec-a91e-49b6-b874-6c26420726f8.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -775,7 +775,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
-https://user-images.githubusercontent.com/93386515/222386988-57ee7419-a89e-4a46-b754-740a1cb1fd4a.mp4
+https://user-images.githubusercontent.com/93386515/226170310-a9e01475-3455-4522-96e3-5461bd3da179.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
