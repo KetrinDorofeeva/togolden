@@ -350,7 +350,7 @@ https://user-images.githubusercontent.com/93386515/226163379-9ab07e45-4efe-4115-
 </table>
 
 Для того, чтобы пользователь смог зарегистрироваться, для начала нужно создать модель.     
-**Модель (Model)** – предоставляет данные, позволяет работать с конкретной таблицей из базы данных и реагирует на команды контроллера, изменяя своё состояние.  
+**Модуль (Module)** – предоставляет данные, позволяет работать с конкретной таблицей из базы данных и реагирует на команды контроллера, изменяя своё состояние.  
 Для занесения данных зарегистрированного пользователя в базу данных, требуется получить таблицу с именем ``user``. Для этого используется статическая функция ``tableName``, которая возвращает имя таблиц. Функция ``attributeLabels`` возвращает ассоциативный массив, в котором передаются имена для отображения в представлении.  
 Для более наглядного понимания безопасного заполнения полей данных информацией, стоит поподробнее описать функцию ``rules``. Она проверяет является ли выбранное поле строкой, числом и т.д. Также в ``rules`` при желании можно написать собственные валидаторы, которые можно будет использовать для своих каких-либо проверок.
 <table>
@@ -488,12 +488,32 @@ public function actionRegistration() {
 **Представление (View)** – отвечает за отображение данных модели пользователю, зашедшему на страницу сайта, реагируя на изменения модели.  
 Представление содержит в себе ту информацию, которая передается ей в контроллере. Здесь осуществляется вёрстка данной страницы, и в места, где это нужно, вставляется информация из контроллера.   
 Для создания интерактивной HTML-формы используется виджет ```ActiveForm```. Его следует описать поподробнее.  
-В контроллере передается экземпляр этой модели (``$model``) в представление для виджета ``ActiveForm``, который генерирует форму. В вышеприведённом коде ``ActiveForm::begin()`` не только создаёт экземпляр формы, но также и знаменует её начало. Весь контент, расположенный между ``ActiveForm::begin()`` и ``ActiveForm::end()``, будет завёрнут в HTML-тег ``<form>``. Для создания в форме элемента с меткой и любой применимой валидацией с помощью JavaScript, вызывается ``ActiveForm::field()``, который возвращает экземпляр ``yii\bootstrap4\ActiveField``. Дополнительные HTML-элементы можно добавить к форме, используя обычный HTML или методы из класса помощника Html, как это было сделано с помощью ``Html::submitButton()``.
+В контроллере передается экземпляр этой модели (``$model``) в представление для виджета ``ActiveForm``, который генерирует форму. В вышеприведённом коде ``ActiveForm::begin()`` не только создаёт экземпляр формы, но также и знаменует её начало. Весь контент, расположенный между ``ActiveForm::begin()`` и ``ActiveForm::end()``, будет завёрнут в HTML-тег ``<form>``. Для создания в форме элемента с меткой и любой применимой валидацией с помощью JavaScript, вызывается ``ActiveForm::field()``, который возвращает экземпляр ``yii\bootstrap4\ActiveField``. Дополнительные HTML-элементы можно добавить к форме, используя обычный HTML или методы из класса помощника Html, как это было сделано с помощью ``Html::submitButton()``.  
+Также присутствует виджет ```DatePicker```. DatePicker – это поле отображения и ввода даты, оно выглядит так же, как выпадающий календарь. Документация по [DatePicker](https://demos.krajee.com/widget-details/datepicker).  
+Помимо этого, дополнительно настроена связь поля ввода местоположения с API Яндекс.Карт. Данную настройку следует описать поподробнее.  
+В файл представления ```/views/site/registration.php``` добавляется код:
+```js
+<script src = "https://api-maps.yandex.ru/2.1?apikey=51785512-ffbb-44c5-9044-7f1ab310d38e&lang=ru_RU" type = "text/javascript"></script>
+<script src = "script.js"></script>
+```
+
+Затем в файл ```/web/js/script.js``` добавляется код:
+```js
+ymaps.ready(init);
+
+function init() {
+    let suggestView = new ymaps.SuggestView('registrationform-address');
+}
+```
+
+В котором ```'registrationform-address'``` является id поля ввода местоположения.<br><br> 
+Представление:
 
 ```php
 <?php
     use yii\helpers\Html;
     use yii\bootstrap4\ActiveForm;
+    use kartik\date\DatePicker;
 
     $this->title = 'Регистрация';
     $this->params['breadcrumbs'][] = $this->title;
@@ -506,22 +526,42 @@ public function actionRegistration() {
         $form = ActiveForm::begin([
             'id' => 'myform',
             'method' => 'post',
-            'fieldConfig' => [
-                'template' => '{label}{input}{error}',
-            ],
         ]);
 
-            echo $form->field($model, 'username')->textInput();
-            echo $form->field($model, 'password')->passwordInput();
-            echo $form->field($model, 'confirm_password')->passwordInput();
+            echo $form->field($model, 'surname', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'name', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'middle_name', ['template' => '{label}{input}{error}'])->textInput();
+            echo $form->field($model, 'gender', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->radioList([1 => 'Мужчина', 2 => 'Женщина']);
+
+            echo $form->field($model, 'date_birth', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->widget(DatePicker::classname(), [
+                'options' => [
+                    'placeholder' => 'гггг-мм-дд'
+                ],
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'endDate' => '-18y'
+                ]
+            ]);
+
+            echo $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::className(), ['mask' => '+7 (999) 999-99-99'])->textInput();
+            echo $form->field($model, 'email', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'address', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'description')->textarea();
+            echo $form->field($model, 'username', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'password', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->passwordInput();
+            echo $form->field($model, 'confirm_password', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->passwordInput();
             echo "<br>";
             echo Html::submitButton("Зарегистрироваться", ['class' => 'btn btn-success']);
         ActiveForm::end(); 
     ?>
 </div>
+
+<script src = "https://api-maps.yandex.ru/2.1?apikey=51785512-ffbb-44c5-9044-7f1ab310d38e&lang=ru_RU" type = "text/javascript"></script>
+<script src = "script.js"></script>
 ```
 
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_1.png" alt = "Регистрация" />  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_2.png" alt = "Регистрация" />
 
 https://user-images.githubusercontent.com/93386515/222385674-795216de-e92b-4b03-8243-309834295069.mp4
 
