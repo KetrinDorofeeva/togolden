@@ -37,6 +37,7 @@
   - <a href = "#update-company">Редактировать компанию</a>
   - <a href = "#delete-company">Удалить компанию</a>
   - <a href = "#my-company">Мои компании</a>
+  - <a href = "#personal">Личный кабинет пользователя</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -1604,6 +1605,218 @@ class CompaniesSearch extends Companies
 Десктопная версия (несколько компаний), а также поиск:  
 
 https://user-images.githubusercontent.com/93386515/226196700-0bcf9305-0eaf-4ae7-864d-032065cedcda.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "personal">Личный кабинет пользователя</p>
+В данном разделе выводится информация о пользователе, а именно:  
+1) Аватарка;  
+2) Фамилия;
+3) Имя
+4) Отчество;
+5) Пол;
+6) Дата рождения;
+7) Телефон;
+8) Email;
+9) Местоположение;
+10) Краткое описание;
+11) Дата регистрации.
+
+Контроллер:
+```php
+//Личный кабинет пользователя
+public function actionPage() {
+    return $this->render('page');
+}
+```
+
+Для того, чтобы доступ к системе имели только авторизированные пользователи, используются фильтры контроля доступа (ACF).  
+ACF – это фильтры, которые могут присоединяться к контроллеру или модулю как поведение.
+```php
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+
+public function behaviors()
+{
+    return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'only' => ['personal', 'update'],
+            'rules' => [
+                [
+                    'actions' => ['personal', 'update'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ],
+        'verbs' => [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'logout' => ['post', 'get'],
+            ],
+        ],
+    ];
+}
+```
+
+Модуль:
+```php
+namespace app\models;
+
+use Yii;
+use yii\web\UploadedFile;
+use yii\helpers\Url;
+
+class Personal extends \yii\db\ActiveRecord
+{
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    public function rules()
+    {
+        return [
+            [['surname', 'name', 'gender', 'date_birth', 'email', 'address'], 'required'],
+            ['avatar', 'file', 'extensions' => 'png, jpg'],
+            [['middle_name', 'phone', 'description'], 'safe'],
+            ['email', 'email'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'avatar' => 'Аватар',
+            'surname' => 'Фамилия',
+            'name' => 'Имя',
+            'middle_name' => 'Отчество',
+            'gender' => 'Пол',
+            'date_birth' => 'Дата рождения',
+            'phone' => 'Телефон',
+            'email' => 'Email',
+            'address' => 'Местоположение',
+            'description' => 'Краткое описание'
+        ];
+    }
+
+    public $avatar_now;
+
+    public function uppage() {
+        if ($this->validate()) {
+            if ($this->avatar = UploadedFile::getInstance($this, 'avatar')) {
+                $file_name = time() . '_user.' . $this->avatar->extension;
+
+                if ($this->avatar->saveAs('avatars/' . $file_name)) {
+                    if (file_exists($this->avatar_now)) {
+                        unlink($this->avatar_now);
+                    }
+                    $this->avatar = 'avatars/' . $file_name;
+                }
+            } else {
+                $this->avatar = $this->avatar_now;
+            }
+        }
+
+        if ($this->save(false)) {
+            Yii::$app->response->redirect(Url::to(['personal/page', 'id' => Yii::$app->user->id]));
+        }
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comments::class, ['id_user' => 'id']);
+    }
+
+    public function getCompanies()
+    {
+        return $this->hasMany(Companies::class, ['id_user' => 'id']);
+    }
+}
+```
+
+Представление:
+```php
+<?php
+    use yii\helpers\Html;
+
+    $this->title = 'Профиль';
+    $this->params['breadcrumbs'][] = 'Профиль';
+?>
+
+<div class="personal-index">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-12 mt-3 ml-auto mr-auto personal_block img">
+            <img src="/web/<?= Yii::$app->user->identity->avatar ?>" class="avatar_img">
+        </div>
+
+        <div class="col-lg-4 col-md-7 col-sm-12 mt-3 ml-auto mr-auto personal_block">
+            <span class="block">
+                <span class="data">Фамилия:</span><?= Yii::$app->user->identity->surname ?>
+            </span>
+            <span class="block">
+                <span class="data">Имя:</span><?= Yii::$app->user->identity->name ?>
+            </span>
+            <?php if (Yii::$app->user->identity->middle_name != NULL) { ?>
+                <span class="block">
+                    <span class="data">Отчество:</span><?= Yii::$app->user->identity->middle_name ?>
+                </span>
+            <?php } ?>
+            <span class="block">
+                <span class="data">Пол:</span> 
+                
+                <?php if (Yii::$app->user->identity->gender == 1) {
+                    echo "Мужчина";
+                } else {
+                    echo "Женщина";
+                } ?>
+            </span>
+            <span class="block">
+                <span class="data">Дата рождения:</span><?= date("d.m.Y", strtotime(Yii::$app->user->identity->date_birth)) ?>
+            </span>
+            <span class="block grey">
+                <span class="data">Дата регистрации:</span><?= date("d.m.Y", strtotime(Yii::$app->user->identity->registration_date)) ?>
+            </span>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 mt-3 ml-auto mr-auto personal_block">
+            <?php if (Yii::$app->user->identity->phone != NULL) { ?>
+                <span class="block">
+                    <span class="data">Телефон:</span><?= Yii::$app->user->identity->phone ?>
+                </span>
+            <?php } ?>
+            <span class="block">
+                <span class="data">Email:</span><?= Yii::$app->user->identity->email ?>
+            </span>
+            <span class="block">
+                <span class="data">Местоположение:</span>
+            </span>
+            <span>
+                <?= Yii::$app->user->identity->address ?>
+            </span>
+            <?php if (Yii::$app->user->identity->description != NULL) { ?>
+                <span class="block">
+                    <span class="data">Краткое описание:</span>
+                </span>
+                <span>
+                    <?= Yii::$app->user->identity->description ?>
+                </span>
+            <?php } ?>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <?php
+            echo Html::a('Редактировать профиль', ['update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-success']);    
+        ?>
+    </div>
+</div>
+```
+
+Десктопная версия:  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-page.png" alt = "Профиль" />
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
