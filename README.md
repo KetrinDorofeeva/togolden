@@ -38,6 +38,7 @@
   - <a href = "#delete-company">Удалить компанию</a>
   - <a href = "#my-company">Мои компании</a>
   - <a href = "#personal">Личный кабинет пользователя</a>
+  - <a href = "#update-personal">Редактировать информацию о пользователе</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -1817,6 +1818,16 @@ class Personal extends \yii\db\ActiveRecord
 
 Десктопная версия:  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-page.png" alt = "Профиль" />
+
+Мобильная версия:  
+
+https://user-images.githubusercontent.com/93386515/226198784-29148437-9e6d-421b-9431-2ad5b32f1c74.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "update-personal">Редактировать информацию о пользователе</p>
+
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
