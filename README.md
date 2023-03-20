@@ -37,6 +37,8 @@
   - <a href = "#update-company">Редактировать компанию</a>
   - <a href = "#delete-company">Удалить компанию</a>
   - <a href = "#my-company">Мои компании</a>
+  - <a href = "#personal">Личный кабинет пользователя</a>
+  - <a href = "#update-personal">Редактировать информацию о пользователе</a>
 
 _________________________________________________________________________________________________________________________________________________________________
 ## <p id = "database-design">База данных</p>
@@ -260,13 +262,13 @@ class Companies extends \yii\db\ActiveRecord
 https://user-images.githubusercontent.com/93386515/221585366-692c3b2c-8b94-4671-a42f-ec39e3a0e31f.mp4
 
 <br>
-Авторизованный пользователь на странице компаний имеет возможность: добавлять компании, а также редактировать и удалять созданные им компании.<br>
+Авторизованный пользователь на странице компаний имеет возможность: добавлять компании, а также редактировать и удалять созданные им компании. Доступны страницы "Мои компании" и раздел личной страницы пользователя, включающий в себя аватар и логин пользователя, при нажатии на которые всплывает выпадающий список со страницей "Профиль" и кнопкой "Выйти".<br>
 Десктопная версия (пользователь):  
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/companies (user).png" alt = "Компании (пользователь)" />
 
 Мобильная версия (пользователь):
 
-https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-b495-3da662f9ccc1.mp4
+https://user-images.githubusercontent.com/93386515/226163379-9ab07e45-4efe-4115-858f-8cecf81cd6d0.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -278,6 +280,59 @@ https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-
     <td><b>Поля</b></td>
     <td><b>Обязательность заполнения</b></td>
     <td><b>Правила заполнения</b></td>
+  </tr>
+  <tr>
+    <td>Фамилия</td>
+    <td>Да</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Имя</td>
+    <td>Да</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Отчество</td>
+    <td>Нет</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Пол</td>
+    <td>Да</td>
+    <td>Две радиокнопки ("Мужчина" и "Женщина").</td>
+  </tr>
+  <tr>
+    <td>Дата рождения</td>
+    <td>Да</td>
+    <td>1) Пользователь должен быть старше 18 лет;<br>
+        2) Нельзя выбрать дату больше текущей.<br>
+        Формат даты рождения: гггг-мм-дд<br>
+        Пример: 2023-05-22
+    </td>
+  </tr>
+  <tr>
+    <td>Телефон</td>
+    <td>Нет</td>
+    <td>Формат телефона должен быть: +7 (XXX) XXX-XX-XX<br>
+        Пример: +7 (981) 942-53-40
+    </td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>Да</td>
+    <td>Значение Email должно быть правильным email адресом.<br>
+        Пример: multiveb@mail.ru
+    </td>
+  </tr>
+  <tr>
+    <td>Местоположение</td>
+    <td>Да</td>
+    <td>При вводе местоположения всплывают текстовые подсказки.</td>
+  </tr>
+  <tr>
+    <td>Краткое описание</td>
+    <td>Нет</td>
+    <td></td>
   </tr>
   <tr>
     <td>Логин</td>
@@ -297,7 +352,7 @@ https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-
 </table>
 
 Для того, чтобы пользователь смог зарегистрироваться, для начала нужно создать модель.     
-**Модель (Model)** – предоставляет данные, позволяет работать с конкретной таблицей из базы данных и реагирует на команды контроллера, изменяя своё состояние.  
+**Модуль (Module)** – предоставляет данные, позволяет работать с конкретной таблицей из базы данных и реагирует на команды контроллера, изменяя своё состояние.  
 Для занесения данных зарегистрированного пользователя в базу данных, требуется получить таблицу с именем ``user``. Для этого используется статическая функция ``tableName``, которая возвращает имя таблиц. Функция ``attributeLabels`` возвращает ассоциативный массив, в котором передаются имена для отображения в представлении.  
 Для более наглядного понимания безопасного заполнения полей данных информацией, стоит поподробнее описать функцию ``rules``. Она проверяет является ли выбранное поле строкой, числом и т.д. Также в ``rules`` при желании можно написать собственные валидаторы, которые можно будет использовать для своих каких-либо проверок.
 <table>
@@ -309,7 +364,12 @@ https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-
   <tr>
     <td>required</td>
     <td>Поля обязательны для заполнения</td>
-    <td>username, password, confirm_password</td>
+    <td>surname, name, gender, date_birth, email, address, username, password, confirm_password</td>
+  </tr>
+  <tr>
+    <td>safe</td>
+    <td>Атрибут безопасен для добавления в базу данных</td>
+    <td>middle_name, phone, description</td>
   </tr>
   <tr>
     <td>unique</td>
@@ -339,7 +399,7 @@ https://user-images.githubusercontent.com/93386515/222384238-47716c5b-9da9-452d-
   <tr>
     <td>message</td>
     <td>Сообщение/предупреждение</td>
-    <td>username, password, confirm_password</td>
+    <td>password, confirm_password</td>
   </tr>
 </table>
 
@@ -352,42 +412,56 @@ use yii\db\ActiveRecord;
 use app\models\User;
 
 class RegistrationForm extends ActiveRecord {
-    public static function tableName() {
-        return 'user';
-    }
+  public static function tableName() {
+      return 'user';
+  }
 
-    public function attributeLabels() {
-        return [
-            'username' => 'Логин',
-            'password' => 'Пароль',
-            'confirm_password' => 'Повторите пароль',
-        ];
-    }
+  public function attributeLabels() {
+      return [
+          'avatar' => 'Аватар',
+          'surname' => 'Фамилия',
+          'name' => 'Имя',
+          'middle_name' => 'Отчество',
+          'gender' => 'Пол',
+          'date_birth' => 'Дата рождения',
+          'phone' => 'Телефон',
+          'email' => 'Email',
+          'address' => 'Местоположение',
+          'description' => 'Краткое описание',
+          'username' => 'Логин',
+          'password' => 'Пароль',
+          'confirm_password' => 'Повторите пароль',
+      ];
+  }
 
-    public $confirm_password;
+  public $confirm_password;
 
-    public function rules() {
-        return [
-            [['username', 'password', 'confirm_password'], 'required'],
-            ['username', 'unique'],
-            ['password', 'match', 'pattern' => '/^\S*(?=\S{8,12})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/', 'message' => 'Пароль от 8 до 12 символов должен содержать хотя бы одну большую букву, одну маленькую букву и одну цифру'],
-            ['confirm_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
-        ];
-    }
+  public function rules() {
+      return [
+          [['surname', 'name', 'gender', 'date_birth', 'email', 'address', 'username', 'password', 'confirm_password'], 'required'],
+          [['middle_name', 'phone', 'description'], 'safe'],
+          ['email', 'email'],
+          ['username', 'unique'],
+          ['password', 'match', 'pattern' => '/^\S*(?=\S{8,12})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/', 'message' => 'Пароль от 8 до 12 символов должен содержать хотя бы одну большую букву, одну маленькую букву и одну цифру'],
+          ['confirm_password', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
+      ];
+  }
 
-    public function registration() {
-        if ($this->validate()) {
-            $this->password = md5($this->password);
+  public function registration() {
+      if ($this->validate()) {
+          $this->avatar = "avatars/null_user.png";
+          $this->registration_date = date("Y-m-d");
+          $this->password = md5($this->password);
 
-            if ($this->save(false)) {
-                if (Yii::$app->user->login(User::findIdentity($this->id), 3600 * 24 * 30)) {
-                    return true;
-                }
-            }
-        }
+          if ($this->save(false)) {
+              if (Yii::$app->user->login(User::findIdentity($this->id), 3600 * 24 * 30)) {
+                  return true;
+              }
+          }
+      }
 
-        return false;
-    }
+      return false;
+  }
 }
 ```
 
@@ -416,12 +490,32 @@ public function actionRegistration() {
 **Представление (View)** – отвечает за отображение данных модели пользователю, зашедшему на страницу сайта, реагируя на изменения модели.  
 Представление содержит в себе ту информацию, которая передается ей в контроллере. Здесь осуществляется вёрстка данной страницы, и в места, где это нужно, вставляется информация из контроллера.   
 Для создания интерактивной HTML-формы используется виджет ```ActiveForm```. Его следует описать поподробнее.  
-В контроллере передается экземпляр этой модели (``$model``) в представление для виджета ``ActiveForm``, который генерирует форму. В вышеприведённом коде ``ActiveForm::begin()`` не только создаёт экземпляр формы, но также и знаменует её начало. Весь контент, расположенный между ``ActiveForm::begin()`` и ``ActiveForm::end()``, будет завёрнут в HTML-тег ``<form>``. Для создания в форме элемента с меткой и любой применимой валидацией с помощью JavaScript, вызывается ``ActiveForm::field()``, который возвращает экземпляр ``yii\bootstrap4\ActiveField``. Дополнительные HTML-элементы можно добавить к форме, используя обычный HTML или методы из класса помощника Html, как это было сделано с помощью ``Html::submitButton()``.
+В контроллере передается экземпляр этой модели (``$model``) в представление для виджета ``ActiveForm``, который генерирует форму. В вышеприведённом коде ``ActiveForm::begin()`` не только создаёт экземпляр формы, но также и знаменует её начало. Весь контент, расположенный между ``ActiveForm::begin()`` и ``ActiveForm::end()``, будет завёрнут в HTML-тег ``<form>``. Для создания в форме элемента с меткой и любой применимой валидацией с помощью JavaScript, вызывается ``ActiveForm::field()``, который возвращает экземпляр ``yii\bootstrap4\ActiveField``. Дополнительные HTML-элементы можно добавить к форме, используя обычный HTML или методы из класса помощника Html, как это было сделано с помощью ``Html::submitButton()``.  
+Также присутствует виджет ```DatePicker```. ```DatePicker``` – это поле отображения и ввода даты, оно выглядит так же, как выпадающий календарь. Документация по [DatePicker](https://demos.krajee.com/widget-details/datepicker).  
+Помимо этого, дополнительно настроена связь поля ввода местоположения с API Яндекс.Карт. Данную настройку следует описать поподробнее.  
+Создаем файл представления ```registration.php``` в папке ```/views/site```, в который добавляется код:
+```js
+<script src = "https://api-maps.yandex.ru/2.1?apikey=51785512-ffbb-44c5-9044-7f1ab310d38e&lang=ru_RU" type = "text/javascript"></script>
+<script src = "script.js"></script>
+```
+
+Затем создается файл ```script.js``` в папке ```/web/js```, в который добавляется код:
+```js
+ymaps.ready(init);
+
+function init() {
+    let suggestView = new ymaps.SuggestView('registrationform-address');
+}
+```
+
+В котором ```'registrationform-address'``` является id поля ввода местоположения.<br><br> 
+Представление:
 
 ```php
 <?php
     use yii\helpers\Html;
     use yii\bootstrap4\ActiveForm;
+    use kartik\date\DatePicker;
 
     $this->title = 'Регистрация';
     $this->params['breadcrumbs'][] = $this->title;
@@ -434,24 +528,44 @@ public function actionRegistration() {
         $form = ActiveForm::begin([
             'id' => 'myform',
             'method' => 'post',
-            'fieldConfig' => [
-                'template' => '{label}{input}{error}',
-            ],
         ]);
 
-            echo $form->field($model, 'username')->textInput();
-            echo $form->field($model, 'password')->passwordInput();
-            echo $form->field($model, 'confirm_password')->passwordInput();
+            echo $form->field($model, 'surname', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'name', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'middle_name', ['template' => '{label}{input}{error}'])->textInput();
+            echo $form->field($model, 'gender', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->radioList([1 => 'Мужчина', 2 => 'Женщина']);
+
+            echo $form->field($model, 'date_birth', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->widget(DatePicker::classname(), [
+                'options' => [
+                    'placeholder' => 'гггг-мм-дд'
+                ],
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'endDate' => '-18y'
+                ]
+            ]);
+
+            echo $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::className(), ['mask' => '+7 (999) 999-99-99'])->textInput();
+            echo $form->field($model, 'email', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'address', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'description')->textarea();
+            echo $form->field($model, 'username', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->textInput();
+            echo $form->field($model, 'password', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->passwordInput();
+            echo $form->field($model, 'confirm_password', ['template' => '{label}<span class="star"> *</span>{input}{error}'])->passwordInput();
             echo "<br>";
             echo Html::submitButton("Зарегистрироваться", ['class' => 'btn btn-success']);
         ActiveForm::end(); 
     ?>
 </div>
+
+<script src = "https://api-maps.yandex.ru/2.1?apikey=51785512-ffbb-44c5-9044-7f1ab310d38e&lang=ru_RU" type = "text/javascript"></script>
+<script src = "script.js"></script>
 ```
 
-<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration.png" alt = "Регистрация" />
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_1.png" alt = "Регистрация (1)" />  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/registration_2.png" alt = "Регистрация (2)" />
 
-https://user-images.githubusercontent.com/93386515/222385674-795216de-e92b-4b03-8243-309834295069.mp4
+https://user-images.githubusercontent.com/93386515/226170009-55e2e7ec-a91e-49b6-b874-6c26420726f8.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -663,7 +777,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/authorization.png" alt = "Авторизация" />
 
-https://user-images.githubusercontent.com/93386515/222386988-57ee7419-a89e-4a46-b754-740a1cb1fd4a.mp4
+https://user-images.githubusercontent.com/93386515/226170310-a9e01475-3455-4522-96e3-5461bd3da179.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
@@ -710,8 +824,8 @@ public function actionView($id)
 }
 ```
 
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
-Модуль Comments:
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>.<br>  
+Модуль ```Comments```:
 ```php
 namespace app\models;
 
@@ -1145,13 +1259,13 @@ function viewGenCom() {
 
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/company-page_2 (user).png" alt = "Страница компании_2 (пользователь)" /><br><br>
 
-https://user-images.githubusercontent.com/93386515/222390277-bebe345b-05ee-4f62-bcc9-87b00fa174af.mp4
+https://user-images.githubusercontent.com/93386515/226183660-c364845d-ebd6-4b30-b0fd-525c817afbb7.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "add-company">Добавить компанию</p>
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>. 
 
 Поля для заполнения:  
 1)  Название;
@@ -1242,7 +1356,7 @@ https://user-images.githubusercontent.com/93386515/221591283-70506e7c-596f-4c3c-
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
 
 ### <p id = "update-company">Редактировать компанию</p>
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>. 
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>. 
 
 Поля для редактирования:  
 1)  Название;
@@ -1346,7 +1460,7 @@ public function actionDelete($id)
 }
 ```
 
-Модуль Companies указан в подразделе <a href = "#main-page">Компании</a>.  
+Модуль ```Companies``` указан в подразделе <a href = "#main-page">Компании</a>.  
 Изображение корзины, при нажатии на которую удаляется компания (и относящиеся к ней комментарии), находится в представлении ```index```, которое указано в подразделе  <a href = "#main-page">Компании</a>.
 
 Десктопная версия:  
@@ -1491,7 +1605,308 @@ class CompaniesSearch extends Companies
 
 Десктопная версия (несколько компаний), а также поиск:  
 
-https://user-images.githubusercontent.com/93386515/222405787-190bf6c9-9856-4d27-8fc2-0b1504d70b73.mp4
+https://user-images.githubusercontent.com/93386515/226196700-0bcf9305-0eaf-4ae7-864d-032065cedcda.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "personal">Личный кабинет пользователя</p>
+В данном разделе выводится информация о пользователе, а именно:  
+1) Аватарка;  
+2) Фамилия;
+3) Имя
+4) Отчество;
+5) Пол;
+6) Дата рождения;
+7) Телефон;
+8) Email;
+9) Местоположение;
+10) Краткое описание;
+11) Дата регистрации.
+
+Контроллер:
+```php
+//Личный кабинет пользователя
+public function actionPage() {
+    return $this->render('page');
+}
+```
+
+Для того, чтобы доступ к системе имели только авторизированные пользователи, используются фильтры контроля доступа (ACF).  
+ACF – это фильтры, которые могут присоединяться к контроллеру или модулю как поведение.
+```php
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+
+public function behaviors()
+{
+    return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'only' => ['personal', 'update'],
+            'rules' => [
+                [
+                    'actions' => ['personal', 'update'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],
+            ],
+        ],
+        'verbs' => [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'logout' => ['post', 'get'],
+            ],
+        ],
+    ];
+}
+```
+
+Модуль:
+```php
+namespace app\models;
+
+class Personal extends \yii\db\ActiveRecord
+{
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    public function rules()
+    {
+        return [
+            [['surname', 'name', 'gender', 'date_birth', 'email', 'address'], 'required'],
+            ['avatar', 'file', 'extensions' => 'png, jpg'],
+            [['middle_name', 'phone', 'description'], 'safe'],
+            ['email', 'email'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'avatar' => 'Аватар',
+            'surname' => 'Фамилия',
+            'name' => 'Имя',
+            'middle_name' => 'Отчество',
+            'gender' => 'Пол',
+            'date_birth' => 'Дата рождения',
+            'phone' => 'Телефон',
+            'email' => 'Email',
+            'address' => 'Местоположение',
+            'description' => 'Краткое описание'
+        ];
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comments::class, ['id_user' => 'id']);
+    }
+
+    public function getCompanies()
+    {
+        return $this->hasMany(Companies::class, ['id_user' => 'id']);
+    }
+}
+```
+
+Представление:
+```php
+<?php
+    use yii\helpers\Html;
+
+    $this->title = 'Профиль';
+    $this->params['breadcrumbs'][] = 'Профиль';
+?>
+
+<div class="personal-index">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-12 mt-3 ml-auto mr-auto personal_block img">
+            <img src="/web/<?= Yii::$app->user->identity->avatar ?>" class="avatar_img">
+        </div>
+
+        <div class="col-lg-4 col-md-7 col-sm-12 mt-3 ml-auto mr-auto personal_block">
+            <span class="block">
+                <span class="data">Фамилия:</span><?= Yii::$app->user->identity->surname ?>
+            </span>
+            <span class="block">
+                <span class="data">Имя:</span><?= Yii::$app->user->identity->name ?>
+            </span>
+            <?php if (Yii::$app->user->identity->middle_name != NULL) { ?>
+                <span class="block">
+                    <span class="data">Отчество:</span><?= Yii::$app->user->identity->middle_name ?>
+                </span>
+            <?php } ?>
+            <span class="block">
+                <span class="data">Пол:</span> 
+                
+                <?php if (Yii::$app->user->identity->gender == 1) {
+                    echo "Мужчина";
+                } else {
+                    echo "Женщина";
+                } ?>
+            </span>
+            <span class="block">
+                <span class="data">Дата рождения:</span><?= date("d.m.Y", strtotime(Yii::$app->user->identity->date_birth)) ?>
+            </span>
+            <span class="block grey">
+                <span class="data">Дата регистрации:</span><?= date("d.m.Y", strtotime(Yii::$app->user->identity->registration_date)) ?>
+            </span>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 mt-3 ml-auto mr-auto personal_block">
+            <?php if (Yii::$app->user->identity->phone != NULL) { ?>
+                <span class="block">
+                    <span class="data">Телефон:</span><?= Yii::$app->user->identity->phone ?>
+                </span>
+            <?php } ?>
+            <span class="block">
+                <span class="data">Email:</span><?= Yii::$app->user->identity->email ?>
+            </span>
+            <span class="block">
+                <span class="data">Местоположение:</span>
+            </span>
+            <span>
+                <?= Yii::$app->user->identity->address ?>
+            </span>
+            <?php if (Yii::$app->user->identity->description != NULL) { ?>
+                <span class="block">
+                    <span class="data">Краткое описание:</span>
+                </span>
+                <span>
+                    <?= Yii::$app->user->identity->description ?>
+                </span>
+            <?php } ?>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <?php
+            echo Html::a('Редактировать профиль', ['update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-success']);    
+        ?>
+    </div>
+</div>
+```
+
+Десктопная версия:  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-page.png" alt = "Профиль" />
+
+Мобильная версия:  
+
+https://user-images.githubusercontent.com/93386515/226198784-29148437-9e6d-421b-9431-2ad5b32f1c74.mp4
+
+<br>
+:bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
+
+### <p id = "update-personal">Редактировать информацию о пользователе</p>
+
+Контроллер:
+```php
+use Yii;
+use app\models\Personal;
+
+//Редактировать информацию о пользователе
+public function actionUpdate($id)
+{
+    $model = Personal::findOne($id);
+    $model->avatar_now = $model->avatar;
+
+    if ($model->load(\Yii::$app->request->post()) && $model->uppage()) {
+
+    }
+
+    return $this->render('update', compact('model'));
+}
+```
+
+В модуль ```Personal```, указанный в подразделе <a href = "#personal">Личный кабинет пользователя</a>, добавляем код для добавления/редактирования и удаления заменяемой аватарки пользователя, а именно виджет ```UploadedFile```. Документация по [UploadedFile](https://unetway.com/tutorial/yii-uploading-files).
+```php
+use Yii;
+use yii\web\UploadedFile;
+use yii\helpers\Url;
+
+public $avatar_now;
+
+public function uppage() {
+    if ($this->validate()) {
+        if ($this->avatar = UploadedFile::getInstance($this, 'avatar')) {
+            $file_name = time() . '_user.' . $this->avatar->extension;
+
+            if ($this->avatar->saveAs('avatars/' . $file_name)) {
+                if (file_exists($this->avatar_now)) {
+                    unlink($this->avatar_now);
+                }
+                $this->avatar = 'avatars/' . $file_name;
+            }
+        } else {
+            $this->avatar = $this->avatar_now;
+        }
+    }
+
+    if ($this->save(false)) {
+        Yii::$app->response->redirect(Url::to(['personal/page', 'id' => Yii::$app->user->id]));
+    }
+}
+```
+
+В представлении указан немаловажный виджет ```DatePicker```. ```DatePicker``` представлен в подразделе <a href = "#registration">Регистрация</a>. 
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\widgets\ActiveForm;
+    use kartik\date\DatePicker;
+
+    $this->title = 'Редактировать профиль';
+    $this->params['breadcrumbs'][] = ['label' => 'Профиль', 'url' => ['page', 'id' => $model->id]];
+    $this->params['breadcrumbs'][] = 'Редактировать профиль';
+?>
+
+<div class="personal-form">
+    <?php $form = ActiveForm::begin([
+            'id' => 'mypersonal',
+            'method' => 'post',
+            'fieldConfig' => [
+                'template' => '{label} {input}<span style="color: #dc3545">{error}</span>',
+            ],
+        ]); ?>
+
+        <div class="row mb-4">
+            <img src="/web/<?= Yii::$app->user->identity->avatar ?>" class="col-lg-3 col-md-12">
+        </div>
+    <?php
+        echo $form->field($model, 'avatar')->fileInput();
+        echo $form->field($model, 'surname', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'name', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'middle_name')->textInput();
+        echo $form->field($model, 'gender', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->radioList([1 => 'Мужчина', 2 => 'Женщина']);
+        
+        echo $form->field($model, 'date_birth', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->widget(DatePicker::classname(), [
+            'options' => [
+                'placeholder' => 'гггг-мм-дд'
+            ],
+            'pluginOptions' => [
+                'format' => 'yyyy-mm-dd',
+                'endDate' => '-18y',
+                'todayHighlight' => true
+            ]
+        ]);
+
+        echo $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::className(), ['mask' => '+7 (999) 999-99-99'])->textInput();
+        echo $form->field($model, 'email', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'address', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'description')->textarea();
+        echo "<br>";
+        echo Html::submitButton("Сохранить", ['class' => 'btn btn-success']);
+    ActiveForm::end(); ?>
+</div>
+```
+
+Десктопная версия:  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (1).png" alt = "Редактировать профиль(1)" /><br>
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (2).png" alt = "Редактировать профиль(2)" />
+
+https://user-images.githubusercontent.com/93386515/226316492-60ca08f9-6263-445b-9918-40c656c3700e.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
