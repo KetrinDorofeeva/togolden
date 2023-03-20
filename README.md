@@ -1906,7 +1906,7 @@ public function uppage() {
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (1).png" alt = "Редактировать профиль(1)" /><br>
 <img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (2).png" alt = "Редактировать профиль(2)" />
 
-Мобильная версия:
+https://user-images.githubusercontent.com/93386515/226316492-60ca08f9-6263-445b-9918-40c656c3700e.mp4
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
