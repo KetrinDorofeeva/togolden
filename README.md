@@ -491,7 +491,7 @@ public function actionRegistration() {
 Представление содержит в себе ту информацию, которая передается ей в контроллере. Здесь осуществляется вёрстка данной страницы, и в места, где это нужно, вставляется информация из контроллера.   
 Для создания интерактивной HTML-формы используется виджет ```ActiveForm```. Его следует описать поподробнее.  
 В контроллере передается экземпляр этой модели (``$model``) в представление для виджета ``ActiveForm``, который генерирует форму. В вышеприведённом коде ``ActiveForm::begin()`` не только создаёт экземпляр формы, но также и знаменует её начало. Весь контент, расположенный между ``ActiveForm::begin()`` и ``ActiveForm::end()``, будет завёрнут в HTML-тег ``<form>``. Для создания в форме элемента с меткой и любой применимой валидацией с помощью JavaScript, вызывается ``ActiveForm::field()``, который возвращает экземпляр ``yii\bootstrap4\ActiveField``. Дополнительные HTML-элементы можно добавить к форме, используя обычный HTML или методы из класса помощника Html, как это было сделано с помощью ``Html::submitButton()``.  
-Также присутствует виджет ```DatePicker```. DatePicker – это поле отображения и ввода даты, оно выглядит так же, как выпадающий календарь. Документация по [DatePicker](https://demos.krajee.com/widget-details/datepicker).  
+Также присутствует виджет ```DatePicker```. ```DatePicker``` – это поле отображения и ввода даты, оно выглядит так же, как выпадающий календарь. Документация по [DatePicker](https://demos.krajee.com/widget-details/datepicker).  
 Помимо этого, дополнительно настроена связь поля ввода местоположения с API Яндекс.Карт. Данную настройку следует описать поподробнее.  
 Создаем файл представления ```registration.php``` в папке ```/views/site```, в который добавляется код:
 ```js
@@ -1666,10 +1666,6 @@ public function behaviors()
 ```php
 namespace app\models;
 
-use Yii;
-use yii\web\UploadedFile;
-use yii\helpers\Url;
-
 class Personal extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -1701,29 +1697,6 @@ class Personal extends \yii\db\ActiveRecord
             'address' => 'Местоположение',
             'description' => 'Краткое описание'
         ];
-    }
-
-    public $avatar_now;
-
-    public function uppage() {
-        if ($this->validate()) {
-            if ($this->avatar = UploadedFile::getInstance($this, 'avatar')) {
-                $file_name = time() . '_user.' . $this->avatar->extension;
-
-                if ($this->avatar->saveAs('avatars/' . $file_name)) {
-                    if (file_exists($this->avatar_now)) {
-                        unlink($this->avatar_now);
-                    }
-                    $this->avatar = 'avatars/' . $file_name;
-                }
-            } else {
-                $this->avatar = $this->avatar_now;
-            }
-        }
-
-        if ($this->save(false)) {
-            Yii::$app->response->redirect(Url::to(['personal/page', 'id' => Yii::$app->user->id]));
-        }
     }
 
     public function getComments()
@@ -1828,6 +1801,112 @@ https://user-images.githubusercontent.com/93386515/226198784-29148437-9e6d-421b-
 
 ### <p id = "update-personal">Редактировать информацию о пользователе</p>
 
+Контроллер:
+```php
+use Yii;
+use app\models\Personal;
+
+//Редактировать информацию о пользователе
+public function actionUpdate($id)
+{
+    $model = Personal::findOne($id);
+    $model->avatar_now = $model->avatar;
+
+    if ($model->load(\Yii::$app->request->post()) && $model->uppage()) {
+
+    }
+
+    return $this->render('update', compact('model'));
+}
+```
+
+В модуль ```Personal```, указанный в подразделе <a href = "#personal">Личный кабинет пользователя</a>, добавляем код для добавления/редактирования и удаления заменяемой аватарки пользователя, а именно виджет ```UploadedFile```. Документация по [UploadedFile](https://unetway.com/tutorial/yii-uploading-files).
+```php
+use Yii;
+use yii\web\UploadedFile;
+use yii\helpers\Url;
+
+public $avatar_now;
+
+public function uppage() {
+    if ($this->validate()) {
+        if ($this->avatar = UploadedFile::getInstance($this, 'avatar')) {
+            $file_name = time() . '_user.' . $this->avatar->extension;
+
+            if ($this->avatar->saveAs('avatars/' . $file_name)) {
+                if (file_exists($this->avatar_now)) {
+                    unlink($this->avatar_now);
+                }
+                $this->avatar = 'avatars/' . $file_name;
+            }
+        } else {
+            $this->avatar = $this->avatar_now;
+        }
+    }
+
+    if ($this->save(false)) {
+        Yii::$app->response->redirect(Url::to(['personal/page', 'id' => Yii::$app->user->id]));
+    }
+}
+```
+
+В представлении указан немаловажный виджет ```DatePicker```. ```DatePicker``` представлен в подразделе <a href = "#registration">Регистрация</a>. 
+```php
+<?php
+    use yii\helpers\Html;
+    use yii\widgets\ActiveForm;
+    use kartik\date\DatePicker;
+
+    $this->title = 'Редактировать профиль';
+    $this->params['breadcrumbs'][] = ['label' => 'Профиль', 'url' => ['page', 'id' => $model->id]];
+    $this->params['breadcrumbs'][] = 'Редактировать профиль';
+?>
+
+<div class="personal-form">
+    <?php $form = ActiveForm::begin([
+            'id' => 'mypersonal',
+            'method' => 'post',
+            'fieldConfig' => [
+                'template' => '{label} {input}<span style="color: #dc3545">{error}</span>',
+            ],
+        ]); ?>
+
+        <div class="row mb-4">
+            <img src="/web/<?= Yii::$app->user->identity->avatar ?>" class="col-lg-3 col-md-12">
+        </div>
+    <?php
+        echo $form->field($model, 'avatar')->fileInput();
+        echo $form->field($model, 'surname', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'name', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'middle_name')->textInput();
+        echo $form->field($model, 'gender', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->radioList([1 => 'Мужчина', 2 => 'Женщина']);
+        
+        echo $form->field($model, 'date_birth', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->widget(DatePicker::classname(), [
+            'options' => [
+                'placeholder' => 'гггг-мм-дд'
+            ],
+            'pluginOptions' => [
+                'format' => 'yyyy-mm-dd',
+                'endDate' => '-18y',
+                'todayHighlight' => true
+            ]
+        ]);
+
+        echo $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::className(), ['mask' => '+7 (999) 999-99-99'])->textInput();
+        echo $form->field($model, 'email', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'address', ['template' => '{label}<span class="star"> *</span>{input}<span style="color: #dc3545">{error}</span>'])->textInput();
+        echo $form->field($model, 'description')->textarea();
+        echo "<br>";
+        echo Html::submitButton("Сохранить", ['class' => 'btn btn-success']);
+    ActiveForm::end(); ?>
+</div>
+```
+
+Десктопная версия:  
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (1).png" alt = "Редактировать профиль(1)" /><br>
+<img src="https://github.com/ketrindorofeeva/togolden/raw/main/for-readme/personal-update (2).png" alt = "Редактировать профиль(2)" />
+
+Мобильная версия:
 
 <br>
 :bookmark_tabs: <a href = "#table-of-contents">Оглавление</a>
