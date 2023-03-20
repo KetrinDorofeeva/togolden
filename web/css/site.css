@@ -2,6 +2,8 @@
 
 main > .container { padding: 70px 15px 20px }
 
+#w4-success-0 { margin-left: 0px }
+
 .alert-success.alert.alert-dismissible { margin-left: 15px }
 
 .body-content .row { justify-content: space-between }
@@ -98,14 +100,68 @@ main > .container { padding: 70px 15px 20px }
 
 .my-index .grid-view .pagination { display: none }
 
-.pagination > li > a, .pagination > li > span {
-    color: #343a40;
-}
+.pagination > li > a, .pagination > li > span { color: #343a40 }
 
 .page-item.active .page-link {
     background: #343a40;
     border-color: #343A40;
 }
+
+.star {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/*Профиль*/
+.navbar-nav .avatar_img {
+    height: 30px;
+    width: 30px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background: #eea90a;
+}
+
+.personal_block.img {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.avatar_img { width: 100% }
+
+.personal_block {
+    width: 92%;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    -webkit-box-shadow: 0px 0px 11px -3px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 0px 11px -3px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 0px 11px -3px rgba(34, 60, 80, 0.2);
+    border-radius: 5px;
+}
+
+.personal_block .block {
+    display: flex;
+    margin-top: 10px;
+}
+
+.personal_block .data {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.personal_block .block.grey {
+    font-style: italic;
+    color: #6d6d6d;
+}
+
+.personal_block .block.grey .data { font-weight: normal }
 
 .not-set {
     color: #c55;

@@ -15,6 +15,9 @@
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -35,43 +38,50 @@
         'options' => ['class' => 'navbar-nav ml-auto'],
         'items' => [
             [
-                'label' => '<span class="ml-3">' . Html::tag('span', Yii::$app->user->identity->username, ['class' => 'mr-3', 'style' => 'color: #FFC134']) . '</span>',
-                'encode' => false, 
-                'visible' => !Yii::$app->user->isGuest,
+                'label' => '<span class="ml-3 align-middle">' . Html::tag('span', 'Компании', ['class' => 'mr-3']) . '</span>',
+                'encode' => false,
+                'url' => ['/site/index'],
             ],
             [
-                'label' => '<span class="ml-3">' . 'Мои компании' . '</span>',
+                'label' => '<span class="ml-3 align-middle">' . 'Мои компании' . '</span>',
                 'encode' => false,
                 'url' => ['/site/my'],
                 'visible' => !Yii::$app->user->isGuest
             ],
             [
-                'label' => '<span class="ml-3">' . Html::tag('span', 'Компании', ['class' => 'mr-3']) . '</span>',
-                'encode' => false,
-                'url' => ['/site/index'],
-            ],
-            [
-                'label' => '<span class="ml-3">' . 'Войти' . Html::img('@web/img/login.svg', ['style' => 'margin-left: 5px']) . '</span>',
+                'label' => '<span class="ml-3 align-middle">' . 'Войти' . Html::img('@web/img/login.svg', ['style' => 'margin-left: 5px']) . '</span>',
                 'encode' => false, 
                 'url' => ['/site/login'],
                 'visible' => \Yii::$app->user->isGuest,
             ],
             [
-                'label' => '<span class="ml-3">' . 'Регистрация' . Html::img('@web/img/registration.svg', ['class' => 'mr-3', 'style' => 'margin-left: 5px']) . '</span>',
+                'label' => '<span class="ml-3 align-middle">' . 'Регистрация' . Html::img('@web/img/registration.svg', ['class' => 'mr-3', 'style' => 'margin-left: 5px']) . '</span>',
                 'encode' => false, 
                 'url' => ['/site/registration'],
                 'visible' => \Yii::$app->user->isGuest,
             ],
             [
-                'label' => '<span class="ml-3">' . 'Выход' . Html::img('@web/img/login.svg', ['style' => 'margin-left: 5px']) . '</span>', 
+                'label' => '<span class="ml-3">' . Html::img('/web/' . Yii::$app->user->identity->avatar, ['class' => 'mr-2 avatar_img']) . Html::tag('span', Yii::$app->user->identity->username, ['class' => 'mr-2', 'style' => 'color: #FFC134']) . '</span>', 
                 'encode' => false,
-                'url' => ['/site/logout'],
-                'visible' => !\Yii::$app->user->isGuest,
+                'visible' => !Yii::$app->user->isGuest,
+                'items' => [
+                    [
+                        'label' => 'Профиль', 
+                        'url' => ['/personal/page']
+                    ],
+                    [
+                        'label' => '<span style="color: #dc3545">Выход</span>' . Html::img('@web/img/logout.svg', ['style' => 'margin-left: 5px']), 
+                        'encode' => false,
+                        'url' => ['/site/logout'],
+                        'visible' => !\Yii::$app->user->isGuest,
+                    ],
+                ],
+                'visible' => !Yii::$app->user->isGuest,
             ],
         ],
     ]);
-    NavBar::end();
-    ?>
+
+    NavBar::end(); ?>
 </header>
 
 <main role="main" class="flex-shrink-0">

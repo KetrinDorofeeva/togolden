@@ -74,9 +74,9 @@
         public function actionRegistration() {
             $model = new RegistrationForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->registration()) { 
+            if ($model->load(Yii::$app->request->post()) && $model->registration()) {
                 return $this->goHome();
-            } 
+            }
 
             return $this->render('registration', compact('model'));
         }

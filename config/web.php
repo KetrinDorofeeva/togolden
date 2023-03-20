@@ -65,6 +65,18 @@
                         'pattern' => 'site/delete/<id>',
                         'route' => 'site/delete',
                     ],
+
+                    //Личный кабинет пользователя
+                    [
+                        'pattern' => 'personal/page/<id>',
+                        'route' => 'personal/page',
+                    ],
+
+                    //Редактировать информацию о пользователе
+                    [
+                        'pattern' => 'personal/update/<id>',
+                        'route' => 'personal/update',
+                    ],
                 ],
             ],
         ],

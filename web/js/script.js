@@ -1,3 +1,10 @@
+/*Выпадающий список адресов*/
+ymaps.ready(init);
+
+function init() {
+    let suggestView = new ymaps.SuggestView('registrationform-address');
+}
+
 //При клике появляется поле для ввода комментария и кнопка
 //Название
 function viewNameCom() {
